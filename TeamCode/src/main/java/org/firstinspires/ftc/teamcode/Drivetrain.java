@@ -211,7 +211,7 @@ public class Drivetrain{
 
     //Refactor of the IMU functions above
 
-    //Gets a specific angle from the IMU
+    //Gets a specific angle from the IMU, returns in Radians
     public double getIMUAngleData(AngleType angle){
         YawPitchRollAngles orientation = internalIMU.getRobotYawPitchRollAngles();
 

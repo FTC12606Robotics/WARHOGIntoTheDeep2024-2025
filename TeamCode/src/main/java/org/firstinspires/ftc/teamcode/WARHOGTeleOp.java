@@ -77,7 +77,7 @@ public class WARHOGTeleOp extends LinearOpMode {
             telemetry.update();
         }
 
-        drivetrain.setAngleOffset(offset);
+        //drivetrain.setAngleOffset(offset); //We'll see if this works
         autoEjectMode = false;
         autoIntakeMode = false;
 
@@ -94,7 +94,7 @@ public class WARHOGTeleOp extends LinearOpMode {
                 // Swallow the possible exception, it should not happen as
                 // currentGamepad1/2 are being copied from valid Gamepads.
             }
-            telemetry.addData("angle", drivetrain.getIMUData()/PI*180);
+            telemetry.addData("angle", drivetrain.getIMUAngleData(Drivetrain.AngleType.HEADING)/PI*180);
 
             //isOuttakeAtTarget = outtake.update();
 
@@ -194,7 +194,7 @@ public class WARHOGTeleOp extends LinearOpMode {
 
             //reset the angle
             if(resetDriveAngle){
-                drivetrain.resetAngle();
+                drivetrain.resetAngleData(Drivetrain.AngleType.HEADING);
             }
 
             //move arm
@@ -205,7 +205,7 @@ public class WARHOGTeleOp extends LinearOpMode {
             if(retractIntakeArm){
                 armpos = intake.runArm(Intake.Height.RETRACTED);
             }
-            modAngle = (drivetrain.getIMUData()/PI*180)%360;    //********Reposition or take out these 2 lines if not needed, figure out what nod angle is for*********
+            modAngle = (drivetrain.getIMUAngleData(Drivetrain.AngleType.HEADING)/PI*180)%360;    //********Reposition or take out these 2 lines if not needed, figure out what nod angle is for*********
             telemetry.addData("mod angle", modAngle);
             //telemetry.addData("left cone stack", leftConeStack);
             //telemetry.addData("right cone stack", rightConeStack);
