@@ -6,6 +6,7 @@ import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 import static java.lang.Thread.sleep;
 
+import com.qualcomm.hardware.bosch.BNO055IMUNew;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -78,6 +79,7 @@ public class Drivetrain{
         imu.initialize(parameters);*/
 
         //New IMU thing
+        internalIMU = hardwareMap.get(BNO055IMUNew.class, "internalIMU");
         internalIMU.initialize(
                 new IMU.Parameters(
                         new RevHubOrientationOnRobot(
@@ -220,7 +222,7 @@ public class Drivetrain{
             default:
             case YAW:
             case Z:
-            case HEADING:
+            case HEADING:                           // TODO 'Degrees' to do less math?
                 return -orientation.getYaw(AngleUnit.RADIANS); //Neg. because Vander said math works better that way Also to optimize switch to degrees to take out the conversions elsewhere
 
             case PITCH:
