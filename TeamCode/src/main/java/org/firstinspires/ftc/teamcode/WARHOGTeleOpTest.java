@@ -77,7 +77,7 @@ public class WARHOGTeleOpTest extends LinearOpMode {
                 // currentGamepad1/2 are being copied from valid Gamepads.
             }
             //telemetry.addData("angle", drivetrain.getIMUData()/PI*180); TODO = TEST
-            telemetry.addData("Yaw Angle aka Heading (deg.)", drivetrain.getIMUAngleData(Drivetrain.AngleType.YAW)*180/PI);
+            telemetry.addData("Yaw Angle/Heading (deg.)", drivetrain.getIMUAngleData(Drivetrain.AngleType.YAW)*180/PI);
             telemetry.addData("Pitch Angle (deg.)", drivetrain.getIMUAngleData(Drivetrain.AngleType.PITCH)*180/PI);
             telemetry.addData("Roll Angle (deg.)", drivetrain.getIMUAngleData(Drivetrain.AngleType.ROLL)*180/PI);
 
@@ -115,6 +115,12 @@ public class WARHOGTeleOpTest extends LinearOpMode {
             for (double line:motorPowers){
                 telemetry.addLine( Double.toString(line) );
             }
+
+            telemetry.addData("RightFrontDrive: ", drivetrain.getMotorInfo(Drivetrain.MotorPlacement.RIGHTFRONT, Drivetrain.MotorQuality.POW));
+            telemetry.addData("RightBackDrive: ", drivetrain.getMotorInfo(Drivetrain.MotorPlacement.RIGHTBACK, Drivetrain.MotorQuality.POW));
+            telemetry.addData("LeftFrontDrive: ", drivetrain.getMotorInfo(Drivetrain.MotorPlacement.LEFTFRONT, Drivetrain.MotorQuality.POW));
+            telemetry.addData("LeftBackDrive: ", drivetrain.getMotorInfo(Drivetrain.MotorPlacement.LEFTBACK, Drivetrain.MotorQuality.POW));
+
 
             //reset the angle
             if(resetDriveAngle){
