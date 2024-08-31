@@ -77,9 +77,9 @@ public class WARHOGTeleOpTest extends LinearOpMode {
                 // currentGamepad1/2 are being copied from valid Gamepads.
             }
             //telemetry.addData("angle", drivetrain.getIMUData()/PI*180); TODO = TEST
-            telemetry.addData("Yaw Angle/Heading (deg.)", drivetrain.getIMUAngleData(Drivetrain.AngleType.YAW)*180/PI);
-            telemetry.addData("Pitch Angle (deg.)", drivetrain.getIMUAngleData(Drivetrain.AngleType.PITCH)*180/PI);
-            telemetry.addData("Roll Angle (deg.)", drivetrain.getIMUAngleData(Drivetrain.AngleType.ROLL)*180/PI);
+            telemetry.addData("Yaw Angle/Heading (deg.)", drivetrain.getIMUAngleData(Drivetrain.AngleType.YAW));
+            telemetry.addData("Pitch Angle (deg.)", drivetrain.getIMUAngleData(Drivetrain.AngleType.PITCH));
+            telemetry.addData("Roll Angle (deg.)", drivetrain.getIMUAngleData(Drivetrain.AngleType.ROLL));
 
 
             //set up inputs
@@ -129,7 +129,7 @@ public class WARHOGTeleOpTest extends LinearOpMode {
             }
 
             //modAngle = (drivetrain.getIMUData()/PI*180)%360;    //********Reposition or take out these 2 lines if not needed, figure out what mod angle is for*********
-            modAngle = (drivetrain.getIMUAngleData(Drivetrain.AngleType.HEADING)*180/PI)%360; //TODO = TEST
+            modAngle = (drivetrain.getIMUAngleData(Drivetrain.AngleType.HEADING))%360; //TODO = TEST
             telemetry.addData("mod angle", modAngle);
 
             //end step

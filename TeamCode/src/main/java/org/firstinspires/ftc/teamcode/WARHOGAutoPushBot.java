@@ -59,7 +59,8 @@ public class WARHOGAutoPushBot extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        PushbotDrivetrain pushDrivetrain = new PushbotDrivetrain(hardwareMap, telemetry);
+        //PushbotDrivetrain pushDrivetrain = new PushbotDrivetrain(hardwareMap, telemetry);
+        Drivetrain drivetrain = new Drivetrain(hardwareMap, telemetry);
         //Intake intake = new Intake(hardwareMap, telemetry);
 
 
@@ -252,25 +253,28 @@ public class WARHOGAutoPushBot extends LinearOpMode {
 
         //Blocks to run for different start positions
         if(red&&front){
+
+            drivetrain.SideMoveForDis(-24, speed);
+
             //Wait and then move off the wall
             //sleep((long)((startSleep)*1000));
-            pushDrivetrain.MoveForDis(4,speed);
+            //pushDrivetrain.MoveForDis(4,speed);
 
             //Check if we are going to the backstage middle
-            if(targetMidPos){
-                pushDrivetrain.MoveForDis(51,speed);
-            }
+            //if(targetMidPos){
+            //    pushDrivetrain.MoveForDis(51,speed);
+            //}
 
             //Turn and Move
-            pushDrivetrain.RotateForDegree(90, speed-.25);
-            pushDrivetrain.MoveForDis(96, speed);
+            //pushDrivetrain.RotateForDegree(90, speed-.25);
+            //pushDrivetrain.MoveForDis(96, speed);
 
             //Move so not touching pixels hopefully
-            pushDrivetrain.MoveForDis(-6,speed);
+            //pushDrivetrain.MoveForDis(-6,speed);
 
             telemetry.addLine("Park complete");
             telemetry.update();
-        }
+        }/*
         else if(red&&back){
             //Wait and then move off the wall
             //sleep((long)(startSleep*1000));
@@ -331,7 +335,7 @@ public class WARHOGAutoPushBot extends LinearOpMode {
             telemetry.addLine("Park complete");
             telemetry.update();
         }
-
+        */
 
     /*void tagToTelemetry(AprilTagDetection detection)
     {
@@ -345,11 +349,5 @@ public class WARHOGAutoPushBot extends LinearOpMode {
 
     }*/
 
-    }
-    private void RunMotorsForSeconds(double secs, double power) throws InterruptedException{
-        PushbotDrivetrain pushDrivetrain = new PushbotDrivetrain(hardwareMap, telemetry);
-        pushDrivetrain.setMotorPowers(power, power, power,power);
-        sleep((long)(secs*1000));
-        pushDrivetrain.setMotorPowers(0,0,0,0);
     }
 }

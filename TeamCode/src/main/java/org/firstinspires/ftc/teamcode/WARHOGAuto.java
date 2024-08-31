@@ -274,7 +274,7 @@ public class WARHOGAuto extends LinearOpMode {
                 useCamera = !useCamera;
             }
 
-            //OpenCV Pipeline 2 w/ RandomPosByColorDetectionPipeline
+            //OpenCV Pipeline 2 w/ RandomPosByColorDetectionPipeline todo
             /*switch (randomPosByColorDetectionPipeline.getLocation()){
                 case LEFT:
                     randomPos = RandomPos.LEFT;

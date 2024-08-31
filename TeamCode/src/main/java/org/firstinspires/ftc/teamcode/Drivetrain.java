@@ -140,6 +140,13 @@ public class Drivetrain{
         rightBackDrive.setPower(motorPowers[3]);
     }
 
+    //Just runs motors, USE ONLY FOR AUTO, I don't know why we need this
+    private void RunMotorsForSeconds(double secs, double power) throws InterruptedException{
+        setMotorPowers(power, power, power,power);
+        sleep((long)(secs)*1000);
+        setMotorPowers(0,0,0,0);
+    }
+
     public void setIndividualPower(MotorPlacement pos, double pow) {
         switch (pos) {
             case LEFTFRONT:
@@ -222,16 +229,16 @@ public class Drivetrain{
             default:
             case YAW:
             case Z:
-            case HEADING:                           // TODO 'Degrees' to do less math?
-                return -orientation.getYaw(AngleUnit.RADIANS); //Neg. because Vander said math works better that way Also to optimize switch to degrees to take out the conversions elsewhere
+            case HEADING:
+                return -orientation.getYaw(AngleUnit.DEGREES); //Neg. because Vander said math works better that way Also to optimize switch to degrees to take out the conversions elsewhere
 
             case PITCH:
             case X:
-                return orientation.getPitch(AngleUnit.RADIANS);
+                return orientation.getPitch(AngleUnit.DEGREES);
 
             case ROLL:
             case Y:
-                return orientation.getRoll((AngleUnit.RADIANS));
+                return orientation.getRoll((AngleUnit.DEGREES));
 
         }
     }
