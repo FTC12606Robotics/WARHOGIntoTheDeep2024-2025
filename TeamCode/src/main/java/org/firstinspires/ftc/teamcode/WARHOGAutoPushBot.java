@@ -59,7 +59,6 @@ public class WARHOGAutoPushBot extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        //PushbotDrivetrain pushDrivetrain = new PushbotDrivetrain(hardwareMap, telemetry);
         Drivetrain drivetrain = new Drivetrain(hardwareMap, telemetry);
         //Intake intake = new Intake(hardwareMap, telemetry);
 

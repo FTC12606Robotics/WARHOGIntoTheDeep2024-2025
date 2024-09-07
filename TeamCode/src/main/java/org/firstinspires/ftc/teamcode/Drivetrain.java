@@ -230,15 +230,15 @@ public class Drivetrain{
             case YAW:
             case Z:
             case HEADING:
-                return -orientation.getYaw(AngleUnit.DEGREES); //Neg. because Vander said math works better that way Also to optimize switch to degrees to take out the conversions elsewhere
+                return -orientation.getYaw(AngleUnit.RADIANS); //Neg. because Vander said math works better that way Also to optimize switch to degrees to take out the conversions elsewhere
 
             case PITCH:
             case X:
-                return orientation.getPitch(AngleUnit.DEGREES);
+                return orientation.getPitch(AngleUnit.RADIANS);
 
             case ROLL:
             case Y:
-                return orientation.getRoll((AngleUnit.DEGREES));
+                return orientation.getRoll((AngleUnit.RADIANS));
 
         }
     }
