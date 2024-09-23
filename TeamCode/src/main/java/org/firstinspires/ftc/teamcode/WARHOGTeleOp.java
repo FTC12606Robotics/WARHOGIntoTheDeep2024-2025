@@ -16,7 +16,6 @@ public class WARHOGTeleOp extends LinearOpMode {
         //set up classes
         Drivetrain drivetrain = new Drivetrain(hardwareMap, telemetry);
         Intake intake = new Intake(hardwareMap/*, telemetry*/);
-        DroneLaunch droneLaunch = new DroneLaunch(hardwareMap);
 
         //set up variables
         double joyx, joyy, joyz, gas, basespeed, armpos, wristmod, offset, /*slideMovement,
@@ -31,10 +30,6 @@ public class WARHOGTeleOp extends LinearOpMode {
                 extendIntakeArm = false, retractIntakeArm = false, uprightIntakeArm = false, sizingIntakeArm = false, hoverIntakeArm = false, boardParallelIntakeArm = false,
                 /*intakeCone = false,*/ wristFixed = false, wristFixedToggle = false/*, isOuttakeAtTarget,
                 outtakeClawMoveIntake = false*/;
-        //For drone launch
-        boolean launchDrone;
-
-        //int leftConeStack = 5, rightConeStack = 5;
 
         offset = 0;
         Drivetrain.Centricity centricity = Drivetrain.Centricity.FIELD;
@@ -46,8 +41,6 @@ public class WARHOGTeleOp extends LinearOpMode {
         Gamepad currentGamepad2 = new Gamepad();
         Gamepad previousGamepad1 = new Gamepad();
         Gamepad previousGamepad2 = new Gamepad();
-
-        droneLaunch.ArmDrone();
 
         while (!isStarted() && !isStopRequested()) {
             //outtake.openClaw();
@@ -259,17 +252,6 @@ public class WARHOGTeleOp extends LinearOpMode {
             if(toggleIntakeClaw){
                 intake.toggleClaw();
             }
-
-            //Arm Drone Launcher
-            if(gamepad2.right_stick_button){
-                droneLaunch.ArmDrone();
-            }
-
-            //Launch Drone
-            if(gamepad2.right_stick_button & gamepad2.left_stick_button){
-                droneLaunch.LaunchDrone();
-            }
-            telemetry.addData("Launched", droneLaunch.Status());
 
             //end step
             telemetry.update();
