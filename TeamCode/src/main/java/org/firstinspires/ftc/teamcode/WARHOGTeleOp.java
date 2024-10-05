@@ -16,11 +16,9 @@ public class WARHOGTeleOp extends LinearOpMode {
         //set up classes
         Drivetrain drivetrain = new Drivetrain(hardwareMap, telemetry);
         NewIntakeOuttake newIntakeOuttake = new NewIntakeOuttake(hardwareMap, telemetry);
-        //Intake intake = new Intake(hardwareMap); //Just so there is no errors take out.
 
         //set up variables
-        double joyx, joyy, joyz, gas, basespeed, offset, /*slideMovement,
-                maxIncrease,*/ modAngle;
+        double joyx, joyy, joyz, gas, baseSpeed, offset, modAngle;
         boolean slideMinimumPos = false, slideLowPos = false, slideMediumPos = false, slideHighPos = false, slideMaxPos = false,
                 centricityToggle, resetDriveAngle, clawToggle,
                 uprightArmPos = false, sizingArmPos = false, downArmPos = false;
@@ -28,7 +26,7 @@ public class WARHOGTeleOp extends LinearOpMode {
         offset = 0;
         Drivetrain.Centricity centricity = Drivetrain.Centricity.FIELD;
 
-        basespeed = .4;
+        baseSpeed = .4;
         int armPos = newIntakeOuttake.getArmPos();
         double armSpeed = .1;
         int armPosChange;
@@ -122,7 +120,7 @@ public class WARHOGTeleOp extends LinearOpMode {
             joyx = currentGamepad1.left_stick_x;
             joyy = -currentGamepad1.left_stick_y;
             joyz = -currentGamepad1.right_stick_x;
-            gas = currentGamepad1.right_trigger*(1-basespeed);
+            gas = currentGamepad1.right_trigger*(1-baseSpeed);
 
             //print vectors
             telemetry.addData("y", joyy);
@@ -131,7 +129,7 @@ public class WARHOGTeleOp extends LinearOpMode {
 
 
             //set and print motor powers
-            double[] motorPowers = drivetrain.driveVectors(centricity, joyx, joyy, joyz, basespeed+gas);
+            double[] motorPowers = drivetrain.driveVectors(centricity, joyx, joyy, joyz, baseSpeed+gas);
             for (double line:motorPowers){
                 telemetry.addLine( Double.toString(line) );
             }
@@ -202,7 +200,7 @@ public class WARHOGTeleOp extends LinearOpMode {
             if(clawToggle) {
                 newIntakeOuttake.toggleClaw();
             }
-            telemetry.addData("Claw: ", newIntakeOuttake.isClawOpen());
+            telemetry.addData("Claw Open?: ", newIntakeOuttake.isClawOpen());
 
             //end step
             telemetry.update();

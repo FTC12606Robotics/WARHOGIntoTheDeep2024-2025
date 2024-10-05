@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -14,14 +13,14 @@ public class NewIntakeOuttake {
 
     private Telemetry telemetry;
 
-    private int slideMax = 1000;
-    private int slideMin = 100;
+    int slideMax = 1000;
+    int slideMin = 0;
 
-    private double armMin = 0;
-    private double armMax = 1;
+    int armPosMin = 0;
+    int armPosMax = 100;
 
-    private double clawOpen = 0.6;
-    private double clawClose = 0.1;
+    double clawOpen = 0;
+    double clawClose = 0.55;
 
     final static double slideSpeed = .5;
     final static double armSpeed = .5;
@@ -59,7 +58,7 @@ public class NewIntakeOuttake {
                 slideMotor.setTargetPosition(500);
                 break;
             case MEDIUM:
-                slideMotor.setTargetPosition(10);
+                slideMotor.setTargetPosition(750);
                 break;
             case HIGH:
                 slideMotor.setTargetPosition(1000);
@@ -84,7 +83,7 @@ public class NewIntakeOuttake {
         slideMotor.setPower(0);
     }
 
-    //Lower slide to minimum
+    //Lower slide to minimum, might take this out because above function works fine.
     public void retractSlide(){
         slideMotor.setTargetPosition(0);
 
