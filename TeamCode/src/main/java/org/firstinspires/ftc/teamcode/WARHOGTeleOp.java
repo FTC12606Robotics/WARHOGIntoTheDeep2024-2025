@@ -15,7 +15,7 @@ public class WARHOGTeleOp extends LinearOpMode {
 
         //set up classes
         Drivetrain drivetrain = new Drivetrain(hardwareMap, telemetry);
-        Intake intake = new Intake(hardwareMap/*, telemetry*/);
+        Intake intake = new Intake(hardwareMap); //Just so there is no errors take out.
 
         //set up variables
         double joyx, joyy, joyz, gas, basespeed, armpos, wristmod, offset, /*slideMovement,
@@ -23,10 +23,8 @@ public class WARHOGTeleOp extends LinearOpMode {
         boolean autoEjectMode = false;
         boolean autoIntakeMode = false;
         //boolean pauseToResetMaxIncrease = false;
-        //boolean stationary = false;
         boolean /*outtakeGround, outtakeLow, outtakeMedium, outtakeHigh, toggleOuttakeClaw = false,*/
-                centricityToggle, resetDriveAngle, autoEjectToggle, autoIntakeToggle,
-                stationaryToggle, toggleIntakeClaw, /*oneDriver = false, oneDriverToggle,*/
+                centricityToggle, resetDriveAngle, autoEjectToggle, autoIntakeToggle, toggleIntakeClaw, /*oneDriver = false, oneDriverToggle,*/
                 extendIntakeArm = false, retractIntakeArm = false, uprightIntakeArm = false, sizingIntakeArm = false, hoverIntakeArm = false, boardParallelIntakeArm = false,
                 /*intakeCone = false,*/ wristFixed = false, wristFixedToggle = false/*, isOuttakeAtTarget,
                 outtakeClawMoveIntake = false*/;
@@ -97,16 +95,12 @@ public class WARHOGTeleOp extends LinearOpMode {
             centricityToggle = currentGamepad1.dpad_down && !previousGamepad1.dpad_down; //change whether the drive is bot or field centric
             autoEjectToggle = currentGamepad2.start && !previousGamepad2.start;
             autoIntakeToggle = currentGamepad2.back && !previousGamepad2.back;
-            //stationaryToggle = currentGamepad1.back && !previousGamepad1.back;
             wristFixedToggle = currentGamepad2.left_trigger>.2 && !(previousGamepad2.left_trigger>.2);
 
             //change the modes based on the inputs
             if(wristFixedToggle) {
                 wristFixed = !wristFixed;
             }
-            //if(stationaryToggle){
-            //    stationary = !stationary;
-            //}
             if(autoEjectToggle){
                 autoEjectMode = !autoEjectMode;
             }
@@ -118,7 +112,6 @@ public class WARHOGTeleOp extends LinearOpMode {
             resetDriveAngle = currentGamepad1.dpad_up; //use when the robot is facing away from you
 
 
-            //telemetry.addData("Stationary", stationary);
             //code to switch between field centric and bot centric drive
             if(centricityToggle){
                 if(centricity==Drivetrain.Centricity.BOT){
