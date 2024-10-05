@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -21,18 +20,18 @@ public class NewIntakeOuttake {
     private double armMin = 0;
     private double armMax = 1;
 
-    private double clawOpen = 0;
-    private double clawClose = .50;
+    private double clawOpen = 0.6;
+    private double clawClose = 0.1;
 
     final static double slideSpeed = .5;
     final static double armSpeed = .5;
 
     enum slideHeight {MINIMUM, LOW, MEDIUM, HIGH, MAX}
-    enum armPos {UP, DOWN}
+    enum armPos {UPRIGHT, DOWN, SIZING}
 
     NewIntakeOuttake(HardwareMap hardwareMap, Telemetry telemetry){
         slideMotor = hardwareMap.get(DcMotor.class, "slideMotor");
-        slideMotor.setDirection(DcMotor.Direction.REVERSE);
+        slideMotor.setDirection(DcMotor.Direction.FORWARD);
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -60,7 +59,7 @@ public class NewIntakeOuttake {
                 slideMotor.setTargetPosition(500);
                 break;
             case MEDIUM:
-                slideMotor.setTargetPosition(750);
+                slideMotor.setTargetPosition(10);
                 break;
             case HIGH:
                 slideMotor.setTargetPosition(1000);
@@ -81,8 +80,8 @@ public class NewIntakeOuttake {
             telemetry.addData("Mode", slideMotor.getMode());
             telemetry.update();
         }
-        //slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //slideMotor.setPower(0);
+        slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        slideMotor.setPower(0);
     }
 
     //Lower slide to minimum
@@ -99,10 +98,17 @@ public class NewIntakeOuttake {
             telemetry.addData("Mode", slideMotor.getMode());
             telemetry.update();
         }
-        //slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //slideMotor.setPower(0);
+        slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        slideMotor.setPower(0);
     }
 
+    public void setSlideHeightByController(int pos){
+
+    }
+
+    public int getSlidePos(){
+        return slideMotor.getCurrentPosition();
+    }
 
     //Arm Stuff
 
@@ -111,8 +117,11 @@ public class NewIntakeOuttake {
             case DOWN:
                 armMotor.setTargetPosition(100);
                 break;
-            case UP:
+            case UPRIGHT:
                 armMotor.setTargetPosition(500);
+                break;
+            case SIZING:
+                armMotor.setTargetPosition(100);
                 break;
             default:
                 break;
@@ -128,8 +137,18 @@ public class NewIntakeOuttake {
             telemetry.addData("Mode", armMotor.getMode());
             telemetry.update();
         }
-        //
-        //
+        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        armMotor.setPower(0);
+    }
+
+    public void setArmByController(int pos){
+        armMotor.setTargetPosition(pos*10);
+        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        armMotor.setPower(armSpeed);
+    }
+
+    public int getArmPos(){
+        return armMotor.getCurrentPosition();
     }
 
 

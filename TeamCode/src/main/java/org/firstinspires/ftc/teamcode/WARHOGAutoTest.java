@@ -4,10 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @Autonomous(name="WARHOGAutoTest", group="")
 public class WARHOGAutoTest extends LinearOpMode {
@@ -325,7 +322,7 @@ public class WARHOGAutoTest extends LinearOpMode {
             sleep(1000);
             newIntakeOuttake.retractSlide();
             sleep(3000);
-            newIntakeOuttake.setArmByDefault(NewIntakeOuttake.armPos.UP);
+            newIntakeOuttake.setArmByDefault(NewIntakeOuttake.armPos.UPRIGHT);
             sleep(1000);
             newIntakeOuttake.setSlideHeight(NewIntakeOuttake.slideHeight.MEDIUM);
             newIntakeOuttake.openClaw();
