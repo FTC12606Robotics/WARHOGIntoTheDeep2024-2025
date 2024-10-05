@@ -37,7 +37,8 @@ public class WARHOGAuto extends LinearOpMode {
 
     boolean left=false, right=false, red=false, blue=false; //Bools to set position
 
-    boolean willPark = false; //for interior code use for if the robot will park
+    //Set to default used above
+    boolean willPark = true; //for interior code use for if the robot will park
     boolean willNet = false; //for interior code use for if the robot will place a pixel on a spike
     boolean willSpecimen = false; //for interior code use for if the robot will place a pixel on the backdrop
     boolean useCamera = true; //for testing to say if it will use the camera
@@ -73,7 +74,7 @@ public class WARHOGAuto extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         Drivetrain drivetrain = new Drivetrain(hardwareMap, telemetry);
-        //Intake intake = new Intake(hardwareMap/*, telemetry*/);
+        NewIntakeOuttake newIntakeOuttake = new NewIntakeOuttake(hardwareMap, telemetry);
 
         //Setup Camera and OpenCV
 /*        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -320,6 +321,11 @@ public class WARHOGAuto extends LinearOpMode {
 
         //Blocks to run for different start positions
         if(left){
+            newIntakeOuttake.setSlideHeight(NewIntakeOuttake.slideHeight.LOW);
+            sleep(3000);
+            newIntakeOuttake.openClaw();
+            sleep(2000);
+            newIntakeOuttake.retractSlide();
             telemetry.update();
         }
         else if(right){

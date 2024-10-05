@@ -15,6 +15,7 @@ public class WARHOGTeleOp extends LinearOpMode {
 
         //set up classes
         Drivetrain drivetrain = new Drivetrain(hardwareMap, telemetry);
+        NewIntakeOuttake newIntakeOuttake = new NewIntakeOuttake(hardwareMap, telemetry);
         Intake intake = new Intake(hardwareMap); //Just so there is no errors take out.
 
         //set up variables

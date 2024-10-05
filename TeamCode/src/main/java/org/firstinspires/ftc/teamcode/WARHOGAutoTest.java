@@ -9,12 +9,10 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-//import java.util.ArrayList;
+@Autonomous(name="WARHOGAutoTest", group="")
+public class WARHOGAutoTest extends LinearOpMode {
 
-@Autonomous(name="WARHOGAutoPushBot", group="")
-public class WARHOGAutoPushBot extends LinearOpMode {
-
-    public WARHOGAutoPushBot() throws InterruptedException {}
+    public WARHOGAutoTest() throws InterruptedException {}
 
     private StartPosColor startPosColor = StartPosColor.RED; //Shouldn't matter this game
     private enum StartPosColor {RED, BLUE}
@@ -37,7 +35,8 @@ public class WARHOGAutoPushBot extends LinearOpMode {
 
     boolean left=false, right=false, red=false, blue=false; //Bools to set position
 
-    boolean willPark = false; //for interior code use for if the robot will park
+    //Set to default used above
+    boolean willPark = true; //for interior code use for if the robot will park
     boolean willNet = false; //for interior code use for if the robot will place a pixel on a spike
     boolean willSpecimen = false; //for interior code use for if the robot will place a pixel on the backdrop
     boolean useCamera = true; //for testing to say if it will use the camera
@@ -72,7 +71,8 @@ public class WARHOGAutoPushBot extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        Drivetrain drivetrain = new Drivetrain(hardwareMap, telemetry);
+        //Drivetrain drivetrain = new Drivetrain(hardwareMap, telemetry);
+        NewIntakeOuttake newIntakeOuttake = new NewIntakeOuttake(hardwareMap, telemetry);
 
         //Setup Camera and OpenCV
 /*        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -96,12 +96,15 @@ public class WARHOGAutoPushBot extends LinearOpMode {
                 telemetry.update();
             }
         });
-
 */
+
         telemetry.setMsTransmissionInterval(50);
 
         //init loop
         while (!isStarted() && !isStopRequested()) {
+            //Run the robot arm to its starting position
+            //intake.runArm(Intake.Height.STARTSIZING);
+
             //set up inputs - have previous so that you can check rising edge
             try {
                 previousGamepad1.copy(currentGamepad1);
@@ -316,6 +319,18 @@ public class WARHOGAutoPushBot extends LinearOpMode {
 
         //Blocks to run for different start positions
         if(left){
+            newIntakeOuttake.setArmByDefault(NewIntakeOuttake.armPos.DOWN);
+            sleep(1000);
+            newIntakeOuttake.setSlideHeight(NewIntakeOuttake.slideHeight.LOW);
+            sleep(1000);
+            newIntakeOuttake.retractSlide();
+            sleep(3000);
+            newIntakeOuttake.setArmByDefault(NewIntakeOuttake.armPos.UP);
+            sleep(1000);
+            newIntakeOuttake.setSlideHeight(NewIntakeOuttake.slideHeight.MEDIUM);
+            newIntakeOuttake.openClaw();
+            sleep(2000);
+            newIntakeOuttake.retractSlide();
             telemetry.update();
         }
         else if(right){
