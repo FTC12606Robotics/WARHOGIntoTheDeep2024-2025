@@ -109,6 +109,7 @@ public class NewIntakeOuttake {
         return slideMotor.getCurrentPosition();
     }
 
+
     //Arm Stuff
 
     public void setArmByDefault(armPos position){

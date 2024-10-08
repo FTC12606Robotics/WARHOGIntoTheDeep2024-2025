@@ -112,8 +112,10 @@ public class WARHOGTeleOp extends LinearOpMode {
             downArmPos = currentGamepad2.b;
 
             slideMinimumPos = currentGamepad2.dpad_down;
-            slideHighPos = currentGamepad2.dpad_up;
+            slideLowPos = currentGamepad2.x;
             slideMediumPos = currentGamepad2.a;
+            slideHighPos = currentGamepad2.dpad_up;
+            slideMaxPos = currentGamepad2.y;
 
 
             //set up vectors
@@ -141,6 +143,7 @@ public class WARHOGTeleOp extends LinearOpMode {
 
             modAngle = (drivetrain.getIMUAngleData(Drivetrain.AngleType.HEADING)/PI*180)%360;    //********Reposition or take out these 2 lines if not needed, figure out what nod angle is for*********
             telemetry.addData("mod angle", modAngle);
+
 
             //move arm
             armPos += armPosChange;
@@ -197,9 +200,7 @@ public class WARHOGTeleOp extends LinearOpMode {
             }
 
             //open/close the claw
-            if(clawToggle) {
-                newIntakeOuttake.toggleClaw();
-            }
+            if(clawToggle) {newIntakeOuttake.toggleClaw();}
             telemetry.addData("Claw Open?: ", newIntakeOuttake.isClawOpen());
 
             //end step
