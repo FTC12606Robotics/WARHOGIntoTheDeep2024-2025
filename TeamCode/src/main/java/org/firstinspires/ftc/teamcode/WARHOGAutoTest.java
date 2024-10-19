@@ -316,18 +316,26 @@ public class WARHOGAutoTest extends LinearOpMode {
 
         //Blocks to run for different start positions
         if(left){
-            newIntakeOuttake.setArmByDefault(NewIntakeOuttake.armPos.DOWN);
+            //newIntakeOuttake.setSlideHeight(NewIntakeOuttake.slideHeight.LOW);
             sleep(1000);
-            newIntakeOuttake.setSlideHeight(NewIntakeOuttake.slideHeight.LOW);
-            sleep(1000);
-            newIntakeOuttake.retractSlide();
-            sleep(3000);
-            newIntakeOuttake.setArmByDefault(NewIntakeOuttake.armPos.UPRIGHT);
-            sleep(1000);
-            newIntakeOuttake.setSlideHeight(NewIntakeOuttake.slideHeight.MEDIUM);
             newIntakeOuttake.openClaw();
-            sleep(2000);
-            newIntakeOuttake.retractSlide();
+            telemetry.addData("clawPos: ",newIntakeOuttake.clawPos());
+            telemetry.update();
+            sleep(4000);
+            newIntakeOuttake.closeClaw();
+            telemetry.addData("clawPos: ",newIntakeOuttake.clawPos());
+            telemetry.update();
+            sleep(4000);
+            //newIntakeOuttake.retractSlide();
+            newIntakeOuttake.toggleClaw();
+            telemetry.addData("clawPos: ",newIntakeOuttake.clawPos());
+            telemetry.update();
+            sleep(3000);
+            newIntakeOuttake.toggleClaw();
+            telemetry.addData("clawPos: ",newIntakeOuttake.clawPos());
+            telemetry.update();
+            sleep(5000);
+
             telemetry.update();
         }
         else if(right){

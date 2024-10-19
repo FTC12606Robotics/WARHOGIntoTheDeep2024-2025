@@ -41,7 +41,7 @@ public class WARHOGTeleOp extends LinearOpMode {
         Gamepad previousGamepad2 = new Gamepad();
 
         while (!isStarted() && !isStopRequested()) {
-            //outtake.openClaw();
+            //newIntakeOuttake.closeClaw();
             armPos = newIntakeOuttake.getArmPos();
             slidePos = newIntakeOuttake.getSlidePos();
             try {
@@ -103,8 +103,8 @@ public class WARHOGTeleOp extends LinearOpMode {
                 }
             }
 
-            armPosChange = (int)(currentGamepad2.left_stick_y*armSpeed);
-            slidePosChange = (int)(currentGamepad2.right_stick_y*slideSpeed);
+            armPosChange = (int)(currentGamepad2.left_stick_y);
+            slidePosChange = (int)(currentGamepad2.right_stick_y);
             clawToggle = currentGamepad2.left_bumper && !previousGamepad2.left_bumper;
 
             sizingArmPos = currentGamepad2.dpad_right;
@@ -150,7 +150,7 @@ public class WARHOGTeleOp extends LinearOpMode {
             if(armPos<0){armPos=0;}
             if(armPos>10){armPos=10;}
 
-            newIntakeOuttake.setArmByController(armPos);
+            //newIntakeOuttake.setArmByController(armPos);
             telemetry.addData("Arm Position", armPos);
             telemetry.addData("True Arm Position", newIntakeOuttake.getArmPos());
 
@@ -177,7 +177,7 @@ public class WARHOGTeleOp extends LinearOpMode {
             telemetry.addData("Slide Position", slidePos);
             telemetry.addData("True Slide Position", newIntakeOuttake.getSlidePos());
 
-            //defined slide position
+            //defined slide positions
             if(slideMinimumPos){
                 newIntakeOuttake.setSlideHeight(NewIntakeOuttake.slideHeight.MINIMUM);
                 slidePos = newIntakeOuttake.getSlidePos();

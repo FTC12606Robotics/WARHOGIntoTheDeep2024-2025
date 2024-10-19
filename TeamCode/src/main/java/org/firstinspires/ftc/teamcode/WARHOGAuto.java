@@ -321,14 +321,11 @@ public class WARHOGAuto extends LinearOpMode {
 
         //Blocks to run for different start positions
         if(left){
-            newIntakeOuttake.setSlideHeight(NewIntakeOuttake.slideHeight.LOW);
-            sleep(3000);
-            newIntakeOuttake.openClaw();
-            sleep(2000);
-            newIntakeOuttake.retractSlide();
+
             telemetry.update();
         }
         else if(right){
+
             telemetry.update();
         }
 
