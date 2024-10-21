@@ -162,7 +162,7 @@ public class WARHOGAuto extends LinearOpMode {
                 startSleep=0;
             }
 
-            //To set where to park in backstage
+            //To set where to park
             if (currentGamepad1.right_bumper && !previousGamepad1.right_bumper) {
                 if(parkPos == ParkPos.ASCENT){
                     parkPos = ParkPos.OBSERVATION;
@@ -321,11 +321,80 @@ public class WARHOGAuto extends LinearOpMode {
 
         //Blocks to run for different start positions
         if(left){
+            if(actionCombination==ActionCombination.NET_ONLY){
+                //Yea
+            }
+            if(actionCombination==ActionCombination.SPECIMEN_ONLY){
+                //OK?
+            }
+            if(actionCombination==ActionCombination.NET_PARK){
+                if (parkPos==ParkPos.ASCENT){
+                    //Yea
+                }
+                if (parkPos==ParkPos.OBSERVATION){
+                    //Why?/prob not
+                }
+            }
+            if(actionCombination==ActionCombination.SPECIMEN_PARK){
+                if (parkPos==ParkPos.ASCENT){
+                    //Possible
+                }
+                if (parkPos==ParkPos.OBSERVATION){
+                    //Prob not
+                }
+            }
+            if(actionCombination==ActionCombination.PARK_ONLY){
+                if (parkPos==ParkPos.ASCENT){
+                    drivetrain.SideMoveForDis(-30, speed);
+                    sleep(1000);
+                    drivetrain.MoveForDis(52, speed);
+                    sleep(1000);
+                    drivetrain.RotateForDegree(-90, speed/2);
+                    sleep(1000);
+                    drivetrain.MoveForDis(-24, speed);
+                    sleep(1000);
+                    newIntakeOuttake.setArmByDefault(NewIntakeOuttake.armPos.UPRIGHT);
+                }
+                if (parkPos==ParkPos.OBSERVATION){
+                    //Could but prob not
+                }
+            }
 
             telemetry.update();
         }
         else if(right){
-
+            if(actionCombination==ActionCombination.NET_ONLY){
+                //Probably don't want to do this
+            }
+            if(actionCombination==ActionCombination.SPECIMEN_ONLY){
+                //YES/TODO
+            }
+            if(actionCombination==ActionCombination.NET_PARK){
+                //Probably don't want to do net
+                if (parkPos==ParkPos.ASCENT){
+                    //Yeah, no
+                }
+                if (parkPos==ParkPos.OBSERVATION){
+                    //Ok to park if don't do net
+                }
+            }
+            if(actionCombination==ActionCombination.SPECIMEN_PARK){
+                if (parkPos==ParkPos.ASCENT){
+                    //Prob not
+                }
+                if (parkPos==ParkPos.OBSERVATION){
+                    //Yea
+                }
+            }
+            if(actionCombination==ActionCombination.PARK_ONLY){
+                if (parkPos==ParkPos.ASCENT){
+                    //Prob not
+                }
+                if (parkPos==ParkPos.OBSERVATION){
+                    //Easy
+                    drivetrain.SideMoveForDis(40, speed);
+                }
+            }
             telemetry.update();
         }
 
