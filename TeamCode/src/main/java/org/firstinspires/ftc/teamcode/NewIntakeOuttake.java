@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -8,7 +9,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class NewIntakeOuttake {
     public DcMotor slideMotor;
-    private DcMotor armMotor;
+    public DcMotor armMotor; //Change later when get good stuff
     private Servo clawServo;
 
     private Telemetry telemetry;
@@ -17,15 +18,14 @@ public class NewIntakeOuttake {
     int slideMin = 0;
 
     int armMin = 0;
-    int armMax = 600;
+    int armMax = 510;
 
     double clawOpen = .40;
     double clawClose = 0.53;
-    final static double slideSpeed = 1;
-    final static double armSpeed = .4;
+    final static double slideSpeed = .75;
+    final static double armSpeed = .25;
 
     //enum slideHeight {MINIMUM, LOW, MEDIUM, HIGH, MAX}
-
     enum slideHeight {MINIMUM(0), LOW(2500), MEDIUM(6000), HIGH(7500), MAX(9000);
         private int value;
 
@@ -53,7 +53,7 @@ public class NewIntakeOuttake {
 
     NewIntakeOuttake(HardwareMap hardwareMap, Telemetry telemetry){
         slideMotor = hardwareMap.get(DcMotor.class, "slideMotor");
-        slideMotor.setDirection(DcMotor.Direction.FORWARD);
+        slideMotor.setDirection(DcMotor.Direction.REVERSE);
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -91,7 +91,7 @@ public class NewIntakeOuttake {
             default:
                 break;
         }*/
-        slideMotor.setTargetPosition(height.getValue()); //todo TEST
+        slideMotor.setTargetPosition(height.getValue());
 
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slideMotor.setPower(slideSpeed);
@@ -145,7 +145,7 @@ public class NewIntakeOuttake {
                 break;
         }*/
 
-        slideMotor.setTargetPosition(height.getValue()); //todo TEST
+        slideMotor.setTargetPosition(height.getValue());
 
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slideMotor.setPower(slideSpeed);
@@ -163,14 +163,76 @@ public class NewIntakeOuttake {
         //slideMotor.setPower(0);
     }
 
-    //TODO test
+    //TODO test don't think I need
     public void setSlideHeightByController(int pos){
 
+        if (pos < slideMin){pos = slideMin;}
+        else if (pos > slideMax){pos = slideMax;}
+
+        slideMotor.setTargetPosition(pos);
+        slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slideMotor.setPower(slideSpeed);
+    }
+    //TODO
+    public void setSlideControllerPower(double power){
+        slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        if (power == -1){
+            power = -slideSpeed;
+        }
+        if (power == 1){
+            power = slideSpeed;
+        }
+
+        int pos = getSlidePos();
+        if (pos< slideMax && pos> slideMin){
+            telemetry.addData("power slide",power);
+            slideMotor.setPower(power);
+        }
+        else if (pos>=slideMax && power<0){
+            slideMotor.setPower(power);
+        }
+        else if (pos<=slideMin && power>0){
+            slideMotor.setPower(power);
+        }
+        else{
+            slideMotor.setPower(0);
+        }
+        /*else{
+            telemetry.addLine("You suck charlie");
+            if (pos>= slideMax){
+                telemetry.addLine("You suck charlie!");
+                if (power<0){
+                    telemetry.addLine("You suck charlie!!");
+                    slideMotor.setPower(power);
+                }
+                else {
+                    telemetry.addLine("You suck charlie!!!");
+                    //slideMotor.setTargetPosition(max);
+                    slideMotor.setPower(0);
+                }
+            }
+            else if (pos<slideMin){
+                telemetry.addLine("You suck charlie!!!!");
+                if (power>0){
+                    telemetry.addLine("You suck charlie!!!!!");
+                    slideMotor.setPower(power);
+                }
+                else {
+                    telemetry.addLine("You suck charlie!!!!!!");
+                    //slideMotor.setTargetPosition(min);
+                    slideMotor.setPower(0);
+                }
+            }
+            //Catch weirdness
+            else{
+                slideMotor.setPower(0);
+            }
+        }*/
     }
 
-    public int getSlidePos(){
-        return slideMotor.getCurrentPosition();
-    }
+    public int defaultSlideValue(slideHeight pos){return pos.getValue();}
+
+    public int getSlidePos(){return slideMotor.getCurrentPosition();}
 
     public boolean isSlideGoingToPos(){return (slideMotor.getMode()==DcMotor.RunMode.RUN_TO_POSITION);}
 
@@ -246,33 +308,81 @@ public class NewIntakeOuttake {
         //}
     }
 
-    public int defaultArmValue(armPos pos){
-        /*switch (pos) {
-            case DOWN:
-                return 100;
-            case UPRIGHT:
-                return  500;
-            case SIZING:
-                return 100;
-            default:
-                return 0;
-        }*/
-        return pos.getValue();
-    }
-
     //TODO test
     public void setArmByController(int pos){
-        armMotor.setTargetPosition(pos*10);
+        pos = pos*10; //Not the best way to do this.
+
+        if (pos < armMin){
+            pos = armMin;
+        }
+        else if (pos > armMax){
+            pos = armMax;
+        }
+
+        armMotor.setTargetPosition(pos);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armMotor.setPower(armSpeed);
     }
+    //TODO
+    public void setArmControllerPower(double power){
+        //armMotor.setPower(0);
+        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        if (power == -1){
+            power = -armSpeed;
+        }
+        if (power == 1){
+            power = armSpeed;
+        }
 
-    public int getArmPos(){
-        return armMotor.getCurrentPosition();
+        int pos = getArmPos();
+
+        if (pos< armMax && pos> armMin){
+            telemetry.addData("arm power: ", power);
+            armMotor.setPower(power);
+        }
+        else if(pos>= armMax && power<0){
+            armMotor.setPower(power);
+        }
+        else if (pos<= armMin && power>0){
+            armMotor.setPower(power);
+        }
+        else{
+            armMotor.setPower(0);
+        }
+        /*else{
+            telemetry.addLine("You suck charlie");
+            if (pos>= armMax){
+                if (power<0){
+                    armMotor.setPower(power);
+                }
+                else {
+                    //armMotor.setTargetPosition(max);
+                    armMotor.setPower(0);
+                }
+            }
+            else if (pos< armMin){
+                if (power>0){
+                    armMotor.setPower(power);
+                }
+                else {
+                    //armMotor.setTargetPosition(min);
+                    armMotor.setPower(0);
+                }
+            }
+            //Catch weirdness
+            else{
+                armMotor.setPower(0);
+            }
+        }*/
     }
 
+    public int defaultArmValue(armPos pos){return pos.getValue();}
 
-    }
+    public int getArmPos(){return armMotor.getCurrentPosition();}
+
+    public boolean isArmGoingToPos(){return (armMotor.getMode()==DcMotor.RunMode.RUN_TO_POSITION);}
+
+
     //===================Claw Stuff===================
 
     //Moves the claw
