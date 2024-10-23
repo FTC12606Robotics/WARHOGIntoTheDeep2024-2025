@@ -73,24 +73,7 @@ public class NewIntakeOuttake {
 
     //Set a slide height
     public void setSlideHeight(slideHeight height) {
-        /*switch (height) {
-            case MINIMUM:
-                slideMotor.setTargetPosition(0);
-                break;
-            case LOW:
-                slideMotor.setTargetPosition(3000);
-                break;
-            case MEDIUM:
-                slideMotor.setTargetPosition(3500);
-                break;
-            case HIGH:
-                slideMotor.setTargetPosition(4000);
-                break;
-            case MAX:
-                slideMotor.setTargetPosition(slideMax);
-            default:
-                break;
-        }*/
+
         slideMotor.setTargetPosition(height.getValue());
 
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -126,24 +109,6 @@ public class NewIntakeOuttake {
     }
 
     public void setSlideHeightNoWait(slideHeight height){
-        /*switch (height) {
-            case MINIMUM:
-                slideMotor.setTargetPosition(0);
-                break;
-            case LOW:
-                slideMotor.setTargetPosition(3000);
-                break;
-            case MEDIUM:
-                slideMotor.setTargetPosition(5000);
-                break;
-            case HIGH:
-                slideMotor.setTargetPosition(6500);
-                break;
-            case MAX:
-                slideMotor.setTargetPosition(slideMax);
-            default:
-                break;
-        }*/
 
         slideMotor.setTargetPosition(height.getValue());
 
@@ -163,16 +128,6 @@ public class NewIntakeOuttake {
         //slideMotor.setPower(0);
     }
 
-    //TODO test don't think I need
-    public void setSlideHeightByController(int pos){
-
-        if (pos < slideMin){pos = slideMin;}
-        else if (pos > slideMax){pos = slideMax;}
-
-        slideMotor.setTargetPosition(pos);
-        slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slideMotor.setPower(slideSpeed);
-    }
     //TODO
     public void setSlideControllerPower(double power){
         slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -240,19 +195,6 @@ public class NewIntakeOuttake {
     //======================Arm Stuff=========================
 
     public void setArmByDefault(armPos position){
-        /*switch (position) {
-            case DOWN:
-                armMotor.setTargetPosition(100);
-                break;
-            case UPRIGHT:
-                armMotor.setTargetPosition(500);
-                break;
-            case SIZING:
-                armMotor.setTargetPosition(100);
-                break;
-            default:
-                break;
-        }*/
 
         armMotor.setTargetPosition(position.getValue()); //todo TEST
 
@@ -271,21 +213,8 @@ public class NewIntakeOuttake {
     }
 
     public void setArmByDefaultNoWait(armPos position){
-        /*switch (position) {
-            case DOWN:
-                armMotor.setTargetPosition(100);
-                break;
-            case UPRIGHT:
-                armMotor.setTargetPosition(500);
-                break;
-            case SIZING:
-                armMotor.setTargetPosition(100);
-                break;
-            default:
-                break;
-        }*/
 
-        armMotor.setTargetPosition(position.getValue()); //todo TEST
+        armMotor.setTargetPosition(position.getValue());
 
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armMotor.setPower(armSpeed);
@@ -308,21 +237,6 @@ public class NewIntakeOuttake {
         //}
     }
 
-    //TODO test
-    public void setArmByController(int pos){
-        pos = pos*10; //Not the best way to do this.
-
-        if (pos < armMin){
-            pos = armMin;
-        }
-        else if (pos > armMax){
-            pos = armMax;
-        }
-
-        armMotor.setTargetPosition(pos);
-        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        armMotor.setPower(armSpeed);
-    }
     //TODO
     public void setArmControllerPower(double power){
         //armMotor.setPower(0);

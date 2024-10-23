@@ -166,9 +166,9 @@ public class WARHOGTeleOp extends LinearOpMode {
             }*/
             if (gamepad2.left_stick_y !=0){
                 newIntakeOuttake.setArmControllerPower(powArm);
+                telemetry.addLine("Moving arm with stick");
             }
 
-            //newIntakeOuttake.setArmByController(armPos);
             telemetry.addData("Arm Position", armPos);
             telemetry.addData("True Arm Position", newIntakeOuttake.getArmPos());
 
@@ -219,9 +219,9 @@ public class WARHOGTeleOp extends LinearOpMode {
             }*/
             if (gamepad2.right_stick_y != 0){
                 newIntakeOuttake.setSlideControllerPower(powSlide);
+                telemetry.addLine("Moving slide with stick");
             }
 
-            //newIntakeOuttake.setSlideHeightByController(slidePos);
             telemetry.addData("Slide Position", slidePos);
             telemetry.addData("True Slide Position", newIntakeOuttake.getSlidePos());
 
@@ -271,7 +271,6 @@ public class WARHOGTeleOp extends LinearOpMode {
             //open/close the claw
             if(clawToggle) {newIntakeOuttake.toggleClaw();}
             telemetry.addData("Claw Open?: ", newIntakeOuttake.isClawOpen());
-            telemetry.addData("Claw Pos: ", newIntakeOuttake.clawPos());
             telemetry.addData("claw trigger: ", clawToggle);
 
             telemetry.addData("Left y joy: ", currentGamepad2.left_stick_y);
