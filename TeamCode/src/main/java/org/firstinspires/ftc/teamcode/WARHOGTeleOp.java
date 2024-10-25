@@ -271,7 +271,6 @@ public class WARHOGTeleOp extends LinearOpMode {
             //open/close the claw
             if(clawToggle) {newIntakeOuttake.toggleClaw();}
             telemetry.addData("Claw Open?: ", newIntakeOuttake.isClawOpen());
-            telemetry.addData("claw trigger: ", clawToggle);
 
             telemetry.addData("Left y joy: ", currentGamepad2.left_stick_y);
             telemetry.addData("right y joy: ", currentGamepad2.right_stick_y);

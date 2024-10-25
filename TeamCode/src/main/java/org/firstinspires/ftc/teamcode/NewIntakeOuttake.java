@@ -8,20 +8,20 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class NewIntakeOuttake {
-    public DcMotor slideMotor;
-    public DcMotor armMotor; //Change later when get good stuff
+    public DcMotor slideMotor; //Change later when get good code
+    public DcMotor armMotor; //Change later when get good code
     private Servo clawServo;
 
     private Telemetry telemetry;
 
-    int slideMax = 9050;
-    int slideMin = 0;
+    final int slideMax = 9050;
+    final int slideMin = 0;
 
-    int armMin = 0;
-    int armMax = 510;
+    final int armMin = 0;
+    final int armMax = 510; //650
 
-    double clawOpen = .40;
-    double clawClose = 0.53;
+    final static double clawOpen = .40;
+    final static double clawClose = 0.53;
     final static double slideSpeed = .75;
     final static double armSpeed = .25;
 
@@ -90,7 +90,7 @@ public class NewIntakeOuttake {
         slideMotor.setPower(0);
     }
 
-    //Lower slide to minimum, might take this out because above function works fine.
+    //Lower slide to minimum
     public void retractSlide(){
         slideMotor.setTargetPosition(0);
 
@@ -108,6 +108,7 @@ public class NewIntakeOuttake {
         slideMotor.setPower(0);
     }
 
+    //Setting to predetermined locations without waiting for conformation of pos.
     public void setSlideHeightNoWait(slideHeight height){
 
         slideMotor.setTargetPosition(height.getValue());
@@ -185,18 +186,21 @@ public class NewIntakeOuttake {
         }*/
     }
 
+    //For the instances where I need to get the values of the defaults
     public int defaultSlideValue(slideHeight pos){return pos.getValue();}
 
     public int getSlidePos(){return slideMotor.getCurrentPosition();}
 
+    //For checking if the slide is currently in motion with a default position
     public boolean isSlideGoingToPos(){return (slideMotor.getMode()==DcMotor.RunMode.RUN_TO_POSITION);}
 
 
     //======================Arm Stuff=========================
 
+    //Set an arm angle
     public void setArmByDefault(armPos position){
 
-        armMotor.setTargetPosition(position.getValue()); //todo TEST
+        armMotor.setTargetPosition(position.getValue());
 
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armMotor.setPower(armSpeed);
@@ -212,6 +216,7 @@ public class NewIntakeOuttake {
         armMotor.setPower(0);
     }
 
+    //Setting to predetermined locations without waiting for conformation of pos.
     public void setArmByDefaultNoWait(armPos position){
 
         armMotor.setTargetPosition(position.getValue());
@@ -290,10 +295,12 @@ public class NewIntakeOuttake {
         }*/
     }
 
+    //For the instances where I need to get the values of the defaults
     public int defaultArmValue(armPos pos){return pos.getValue();}
 
     public int getArmPos(){return armMotor.getCurrentPosition();}
 
+    //For checking if the arm is currently in motion with a default position
     public boolean isArmGoingToPos(){return (armMotor.getMode()==DcMotor.RunMode.RUN_TO_POSITION);}
 
 
