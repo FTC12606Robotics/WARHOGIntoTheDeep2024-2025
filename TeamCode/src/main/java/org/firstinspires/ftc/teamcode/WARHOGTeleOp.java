@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-import com.qualcomm.robotcore.hardware.DcMotor; //Take out when have good code
+//import com.qualcomm.robotcore.hardware.DcMotor; //Take out when have good code
 
 @TeleOp(name="WARHOGTeleOp", group="")
 public class WARHOGTeleOp extends LinearOpMode {
@@ -21,9 +21,9 @@ public class WARHOGTeleOp extends LinearOpMode {
 
         //set up variables
         double joyx, joyy, joyz, gas, baseSpeed, offset, modAngle;
-        boolean slideMinimumPos = false, slideLowPos = false, slideMediumPos = false, slideHighPos = false, slideMaxPos = false,
-                centricityToggle, resetDriveAngle, clawToggle,
-                uprightArmPos = false, sizingArmPos = false, downArmPos = false;
+        boolean slideMinimumPos, slideLowPos, slideMediumPos, slideHighPos, slideMaxPos,
+                centricityToggle, resetDriveAngle, clawToggle, encoderReset, PIDTEST,
+                uprightArmPos, sizingArmPos, downArmPos;
 
         offset = 0;
         Drivetrain.Centricity centricity = Drivetrain.Centricity.FIELD;
@@ -105,13 +105,14 @@ public class WARHOGTeleOp extends LinearOpMode {
                 }
             }
 
-            armPosChange = (int)(currentGamepad2.left_stick_y);
-            slidePosChange = (int)(currentGamepad2.right_stick_y);
+            armPosChange = (int)(currentGamepad2.left_stick_y); //Change to neg. to make code cleaner later
+            slidePosChange = (int)(currentGamepad2.right_stick_y); //Change to neg. to make code cleaner later
             clawToggle = currentGamepad2.left_bumper && !previousGamepad2.left_bumper;
+            encoderReset = currentGamepad2.right_bumper && !previousGamepad2.right_bumper;
 
-            sizingArmPos = currentGamepad2.dpad_right;
+            sizingArmPos = currentGamepad2.b;
             uprightArmPos = currentGamepad2.dpad_left;
-            downArmPos = currentGamepad2.b;
+            downArmPos = currentGamepad2.dpad_right;
 
             slideMinimumPos = currentGamepad2.dpad_down;
             slideLowPos = currentGamepad2.x;
@@ -119,6 +120,7 @@ public class WARHOGTeleOp extends LinearOpMode {
             slideHighPos = currentGamepad2.dpad_up;
             slideMaxPos = currentGamepad2.y;
 
+            PIDTEST = currentGamepad2.left_trigger != 0;
 
             //set up vectors
             joyx = currentGamepad1.left_stick_x;
@@ -147,6 +149,11 @@ public class WARHOGTeleOp extends LinearOpMode {
             telemetry.addData("mod angle", modAngle);
 
 
+            //Reset Motor Encoders to Zero
+            if(encoderReset){
+                newIntakeOuttake.resetEncoders();
+            }
+
             //move arm
             armPos += armPosChange;
             int powArm = 0;
@@ -168,6 +175,9 @@ public class WARHOGTeleOp extends LinearOpMode {
                 newIntakeOuttake.setArmControllerPower(powArm);
                 telemetry.addLine("Moving arm with stick");
             }
+            else  if (gamepad2.right_stick_y == 0 && !newIntakeOuttake.isArmGoingToPos()){
+                newIntakeOuttake.setArmControllerPower(0);
+            }
 
             telemetry.addData("Arm Position", armPos);
             telemetry.addData("True Arm Position", newIntakeOuttake.getArmPos());
@@ -175,27 +185,27 @@ public class WARHOGTeleOp extends LinearOpMode {
             //defined arm positions
             if(uprightArmPos){
                 newIntakeOuttake.setArmByDefaultNoWait(NewIntakeOuttake.armPos.UPRIGHT);
-                int armTarget = newIntakeOuttake.defaultArmValue(NewIntakeOuttake.armPos.UPRIGHT);
+                /*int armTarget = newIntakeOuttake.defaultArmValue(NewIntakeOuttake.armPos.UPRIGHT);
                 if (newIntakeOuttake.getArmPos()<(armTarget+5) && newIntakeOuttake.getArmPos()>(armTarget-5)){
                     newIntakeOuttake.armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                     newIntakeOuttake.armMotor.setPower(0);
-                }
+                }*/
             }
             if(downArmPos){
                 newIntakeOuttake.setArmByDefaultNoWait(NewIntakeOuttake.armPos.DOWN);
-                int armTarget = newIntakeOuttake.defaultArmValue(NewIntakeOuttake.armPos.DOWN);
+                /*int armTarget = newIntakeOuttake.defaultArmValue(NewIntakeOuttake.armPos.DOWN);
                 if (newIntakeOuttake.getArmPos()<(armTarget+5) && newIntakeOuttake.getArmPos()>(armTarget-5)){
                     newIntakeOuttake.armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                     newIntakeOuttake.armMotor.setPower(0);
-                }
+                }*/
             }
             if(sizingArmPos){
                 newIntakeOuttake.setArmByDefaultNoWait(NewIntakeOuttake.armPos.SIZING);
-                int armTarget = newIntakeOuttake.defaultArmValue(NewIntakeOuttake.armPos.SIZING);
+                /*int armTarget = newIntakeOuttake.defaultArmValue(NewIntakeOuttake.armPos.SIZING);
                 if (newIntakeOuttake.getArmPos()<(armTarget+5) && newIntakeOuttake.getArmPos()>(armTarget-5)){
                     newIntakeOuttake.armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                     newIntakeOuttake.armMotor.setPower(0);
-                }
+                }*/
             }
             armPos = newIntakeOuttake.getArmPos();
 
@@ -221,50 +231,58 @@ public class WARHOGTeleOp extends LinearOpMode {
                 newIntakeOuttake.setSlideControllerPower(powSlide);
                 telemetry.addLine("Moving slide with stick");
             }
+            else if (gamepad2.right_stick_y == 0 && !newIntakeOuttake.isSlideGoingToPos()){
+                newIntakeOuttake.setSlideControllerPower(0);
+            }
 
             telemetry.addData("Slide Position", slidePos);
             telemetry.addData("True Slide Position", newIntakeOuttake.getSlidePos());
 
+            //TODO FOR TEST
+            if (PIDTEST){
+                newIntakeOuttake.setSlideHeightPID(NewIntakeOuttake.slideHeight.HIGH);
+            }
+
             //defined slide positions
             if(slideMinimumPos){
                 newIntakeOuttake.setSlideHeightNoWait(NewIntakeOuttake.slideHeight.MINIMUM);
-                int slideTarget = newIntakeOuttake.defaultSlideValue(NewIntakeOuttake.slideHeight.MINIMUM);
+                /*int slideTarget = newIntakeOuttake.defaultSlideValue(NewIntakeOuttake.slideHeight.MINIMUM);
                 if (newIntakeOuttake.getSlidePos()<(slideTarget+5) && newIntakeOuttake.getSlidePos()>(slideTarget-5)){
                     newIntakeOuttake.slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                     newIntakeOuttake.slideMotor.setPower(0);
-                }
+                }*/
             }
             if(slideLowPos){
                 newIntakeOuttake.setSlideHeightNoWait(NewIntakeOuttake.slideHeight.LOW);
-                int slideTarget = newIntakeOuttake.defaultSlideValue(NewIntakeOuttake.slideHeight.LOW);
+                /*int slideTarget = newIntakeOuttake.defaultSlideValue(NewIntakeOuttake.slideHeight.LOW);
                 if (newIntakeOuttake.getSlidePos()<(slideTarget+5) && newIntakeOuttake.getSlidePos()>(slideTarget-5)){
                     newIntakeOuttake.slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                     newIntakeOuttake.slideMotor.setPower(0);
-                }
+                }*/
             }
             if(slideMediumPos){
                 newIntakeOuttake.setSlideHeightNoWait(NewIntakeOuttake.slideHeight.MEDIUM);
-                int slideTarget = newIntakeOuttake.defaultSlideValue(NewIntakeOuttake.slideHeight.MEDIUM);
+                /*int slideTarget = newIntakeOuttake.defaultSlideValue(NewIntakeOuttake.slideHeight.MEDIUM);
                 if (newIntakeOuttake.getSlidePos()<(slideTarget+5) && newIntakeOuttake.getSlidePos()>(slideTarget-5)){
                     newIntakeOuttake.slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                     newIntakeOuttake.slideMotor.setPower(0);
-                }
+                }*/
             }
             if(slideHighPos){
                 newIntakeOuttake.setSlideHeightNoWait(NewIntakeOuttake.slideHeight.HIGH);
-                int slideTarget = newIntakeOuttake.defaultSlideValue(NewIntakeOuttake.slideHeight.HIGH);
+                /*int slideTarget = newIntakeOuttake.defaultSlideValue(NewIntakeOuttake.slideHeight.HIGH);
                 if (newIntakeOuttake.getSlidePos()<(slideTarget+5) && newIntakeOuttake.getSlidePos()>(slideTarget-5)){
                     newIntakeOuttake.slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                     newIntakeOuttake.slideMotor.setPower(0);
-                }
+                }*/
             }
             if(slideMaxPos){
                 newIntakeOuttake.setSlideHeightNoWait(NewIntakeOuttake.slideHeight.MAX);
-                int slideTarget = newIntakeOuttake.defaultSlideValue(NewIntakeOuttake.slideHeight.MAX);
+                /*int slideTarget = newIntakeOuttake.defaultSlideValue(NewIntakeOuttake.slideHeight.MAX);
                 if (newIntakeOuttake.getSlidePos()<(slideTarget+5) && newIntakeOuttake.getSlidePos()>(slideTarget-5)){
                     newIntakeOuttake.slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                     newIntakeOuttake.slideMotor.setPower(0);
-                }
+                }*/
             }
             slidePos = newIntakeOuttake.getSlidePos(); //Update other counter
 

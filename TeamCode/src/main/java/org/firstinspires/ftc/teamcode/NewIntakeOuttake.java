@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -14,11 +14,13 @@ public class NewIntakeOuttake {
 
     private Telemetry telemetry;
 
-    final int slideMax = 9050;
+    final int slideMax = 10050;
     final int slideMin = 0;
 
     final int armMin = 0;
-    final int armMax = 510; //650
+    final int armMax = 550; //~650
+
+    final static int motorLimitBuffer = 50;
 
     final static double clawOpen = .40;
     final static double clawClose = 0.53;
@@ -68,6 +70,22 @@ public class NewIntakeOuttake {
         this.telemetry = telemetry;
     }
 
+    //For resetting encoders
+    public void resetEncoders(){
+        slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        telemetry.addLine("Resought Motor Encoders");
+    }
+
+    //For future use
+    /*public double motorAmps(){
+        double slideAmps = slideMotor.getCurrent();
+        double armAmps = armMotor.getCurrent();
+
+        double amps = slideAmps + armAmps;
+        return amps;
+    }*/
+
 
     //=======================Slide Stuff========================
 
@@ -88,6 +106,97 @@ public class NewIntakeOuttake {
         }
         slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         slideMotor.setPower(0);
+    }
+
+    /*// PID Constants - Tune these values
+    final double Kp = 0.05; // Proportional gain
+    final double Ki = 0.0;  // Integral gain
+    final double Kd = 0.0;  // Derivative gain
+
+    // PID variables
+    double integralSum = 0;
+    double lastError = 0;
+
+    public void setSlideControllerPID(slideHeight height){
+        slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        int targetPosition = height.getValue();
+
+        int currentPosition = slideMotor.getCurrentPosition();
+        double error = targetPosition - currentPosition;
+
+        // Proportional term
+        double proportional = Kp * error;
+
+        // Integral term (accumulate error over time)
+        integralSum += error;
+        double integral = Ki * integralSum;
+
+        // Derivative term (rate of error change)
+        double derivative = Kd * (error - lastError);
+        lastError = error;
+
+        // PID output for motor power
+        double power = proportional + integral + derivative;
+
+        // Ensure power is within bounds [-1, 1]
+        power = Math.max(-1, Math.min(1, power));
+
+        // Check boundary limits and apply power if within bounds
+        if (currentPosition< slideMax && currentPosition> slideMin){
+            telemetry.addData("PID Power", power);
+            slideMotor.setPower(power);
+        }
+        else if (currentPosition>=slideMax && power<0){
+            telemetry.addData("PID Power", power);
+            slideMotor.setPower(power);
+        }
+        else if (currentPosition<=slideMin && power>0){
+            telemetry.addData("PID Power", power);
+            slideMotor.setPower(power);
+        }
+        else{
+            slideMotor.setPower(0);
+        }
+    }*/
+
+    double integralSum = 0;
+    final double Kp = 0.00;
+    final double Ki = 0.00;
+    final double Kd = 0.00;
+
+    ElapsedTime timer = new ElapsedTime();
+    private double lastError = 0;
+    public double PIDControl(int target, double currentPos){
+        double error = target - currentPos;
+        integralSum += error * timer.seconds();
+        double derivative = (error - lastError)/timer.seconds();
+        lastError = error;
+
+        timer.reset();
+
+        double output = (error*Kp) + (derivative*Kd) + (integralSum*Ki);
+        return output;
+    }
+
+    public void setSlideHeightPID(slideHeight height) {
+
+        //slideMotor.setTargetPosition(height.getValue());
+
+        slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        double power = PIDControl(height.getValue(), slideMotor.getCurrentPosition());
+        slideMotor.setPower(power);
+        telemetry.addData("Setting Slide Height with PID", power);
+        /*while(slideMotor.isBusy()) {
+            telemetry.addLine("Set Slide Height");
+            telemetry.addData("Slide Position", slideMotor.getCurrentPosition());
+            telemetry.addData("Slide Target", slideMotor.getTargetPosition());
+            telemetry.addData("Slide Power", slideMotor.getPower());
+            telemetry.addData("Mode", slideMotor.getMode());
+            telemetry.update();
+        }
+        slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        slideMotor.setPower(0);*/
     }
 
     //Lower slide to minimum
@@ -139,15 +248,27 @@ public class NewIntakeOuttake {
             power = slideSpeed;
         }
 
-        int pos = getSlidePos();
+        //int pos = getSlidePos();
+        int pos = slideMotor.getCurrentPosition();
+
+        // Approach limits with reduced speed
+        if (pos >= (slideMax - motorLimitBuffer) && power > 0) {
+            power = power/2; // Slow down as it approaches max
+        }
+        else if (pos <= (slideMin + motorLimitBuffer) && power < 0) {
+            power = power/2; // Slow down as it approaches min
+        }
+
         if (pos< slideMax && pos> slideMin){
-            telemetry.addData("power slide",power);
+            telemetry.addData("slide power: T1", power);
             slideMotor.setPower(power);
         }
         else if (pos>=slideMax && power<0){
+            telemetry.addData("slide power: T2", power);
             slideMotor.setPower(power);
         }
         else if (pos<=slideMin && power>0){
+            telemetry.addData("slide power: T3", power);
             slideMotor.setPower(power);
         }
         else{
@@ -202,6 +323,10 @@ public class NewIntakeOuttake {
 
         armMotor.setTargetPosition(position.getValue());
 
+        //if(armMotor.getTargetPosition() < 100 && armOKMove()){
+        //    armMotor.setTargetPosition(100);
+        //}
+
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armMotor.setPower(armSpeed);
         while(armMotor.isBusy()) {
@@ -220,6 +345,10 @@ public class NewIntakeOuttake {
     public void setArmByDefaultNoWait(armPos position){
 
         armMotor.setTargetPosition(position.getValue());
+
+        //if(armMotor.getTargetPosition() < 100 && armOKMove()){
+        //    armMotor.setTargetPosition(100);
+        //}
 
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armMotor.setPower(armSpeed);
@@ -253,7 +382,16 @@ public class NewIntakeOuttake {
             power = armSpeed;
         }
 
-        int pos = getArmPos();
+        //int pos = getArmPos();
+        int pos = armMotor.getCurrentPosition();
+
+        // Approach limits with reduced speed
+        if (pos >= (slideMax - motorLimitBuffer) && power > 0) {
+            power = power/2; // Slow dow as it approaches max
+        }
+        else if (pos <= (slideMin + motorLimitBuffer) && power < 0) {
+            power = power/2; // Slow down as it approaches min
+        }
 
         if (pos< armMax && pos> armMin){
             telemetry.addData("arm power: ", power);
@@ -303,6 +441,10 @@ public class NewIntakeOuttake {
     //For checking if the arm is currently in motion with a default position
     public boolean isArmGoingToPos(){return (armMotor.getMode()==DcMotor.RunMode.RUN_TO_POSITION);}
 
+    //Checking if slide is in ok pos first
+    public boolean armOKMove(){
+        return !(slideMotor.getCurrentPosition()>=1000); //TODO see if team wants this
+    }
 
     //===================Claw Stuff===================
 
