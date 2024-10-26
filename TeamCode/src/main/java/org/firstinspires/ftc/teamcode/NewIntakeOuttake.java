@@ -14,21 +14,21 @@ public class NewIntakeOuttake {
 
     private Telemetry telemetry;
 
-    final int slideMax = 10050;
+    final int slideMax = 7500;
     final int slideMin = 0;
 
     final int armMin = 0;
     final int armMax = 550; //~650
 
-    final static int motorLimitBuffer = 50;
+    final static int motorLimitBuffer = 100;
 
     final static double clawOpen = .40;
-    final static double clawClose = 0.53;
-    final static double slideSpeed = .75;
+    final static double clawClose = 0.54;
+    final static double slideSpeed = 1;
     final static double armSpeed = .25;
 
     //enum slideHeight {MINIMUM, LOW, MEDIUM, HIGH, MAX}
-    enum slideHeight {MINIMUM(0), LOW(2500), MEDIUM(6000), HIGH(7500), MAX(9000);
+    enum slideHeight {MINIMUM(0), LOW(2000), MEDIUM(4500), HIGH(6500), MAX(7000);
         private int value;
 
         private slideHeight(int value) {
@@ -52,6 +52,15 @@ public class NewIntakeOuttake {
            return value;
        }
       }
+
+      //For PID
+    double integralSum = 0;
+    final double Kp = 0.03;
+    final double Ki = 0.00;
+    final double Kd = 0.01;
+
+    ElapsedTime timer = new ElapsedTime();
+    private double lastError = 0;
 
     NewIntakeOuttake(HardwareMap hardwareMap, Telemetry telemetry){
         slideMotor = hardwareMap.get(DcMotor.class, "slideMotor");
@@ -108,65 +117,6 @@ public class NewIntakeOuttake {
         slideMotor.setPower(0);
     }
 
-    /*// PID Constants - Tune these values
-    final double Kp = 0.05; // Proportional gain
-    final double Ki = 0.0;  // Integral gain
-    final double Kd = 0.0;  // Derivative gain
-
-    // PID variables
-    double integralSum = 0;
-    double lastError = 0;
-
-    public void setSlideControllerPID(slideHeight height){
-        slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        int targetPosition = height.getValue();
-
-        int currentPosition = slideMotor.getCurrentPosition();
-        double error = targetPosition - currentPosition;
-
-        // Proportional term
-        double proportional = Kp * error;
-
-        // Integral term (accumulate error over time)
-        integralSum += error;
-        double integral = Ki * integralSum;
-
-        // Derivative term (rate of error change)
-        double derivative = Kd * (error - lastError);
-        lastError = error;
-
-        // PID output for motor power
-        double power = proportional + integral + derivative;
-
-        // Ensure power is within bounds [-1, 1]
-        power = Math.max(-1, Math.min(1, power));
-
-        // Check boundary limits and apply power if within bounds
-        if (currentPosition< slideMax && currentPosition> slideMin){
-            telemetry.addData("PID Power", power);
-            slideMotor.setPower(power);
-        }
-        else if (currentPosition>=slideMax && power<0){
-            telemetry.addData("PID Power", power);
-            slideMotor.setPower(power);
-        }
-        else if (currentPosition<=slideMin && power>0){
-            telemetry.addData("PID Power", power);
-            slideMotor.setPower(power);
-        }
-        else{
-            slideMotor.setPower(0);
-        }
-    }*/
-
-    double integralSum = 0;
-    final double Kp = 0.00;
-    final double Ki = 0.00;
-    final double Kd = 0.00;
-
-    ElapsedTime timer = new ElapsedTime();
-    private double lastError = 0;
     public double PIDControl(int target, double currentPos){
         double error = target - currentPos;
         integralSum += error * timer.seconds();
@@ -238,7 +188,6 @@ public class NewIntakeOuttake {
         //slideMotor.setPower(0);
     }
 
-    //TODO
     public void setSlideControllerPower(double power){
         slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         if (power == -1){
@@ -274,37 +223,19 @@ public class NewIntakeOuttake {
         else{
             slideMotor.setPower(0);
         }
-        /*else{
-            telemetry.addLine("You suck charlie");
-            if (pos>= slideMax){
-                telemetry.addLine("You suck charlie!");
-                if (power<0){
-                    telemetry.addLine("You suck charlie!!");
-                    slideMotor.setPower(power);
-                }
-                else {
-                    telemetry.addLine("You suck charlie!!!");
-                    //slideMotor.setTargetPosition(max);
-                    slideMotor.setPower(0);
-                }
-            }
-            else if (pos<slideMin){
-                telemetry.addLine("You suck charlie!!!!");
-                if (power>0){
-                    telemetry.addLine("You suck charlie!!!!!");
-                    slideMotor.setPower(power);
-                }
-                else {
-                    telemetry.addLine("You suck charlie!!!!!!");
-                    //slideMotor.setTargetPosition(min);
-                    slideMotor.setPower(0);
-                }
-            }
-            //Catch weirdness
-            else{
-                slideMotor.setPower(0);
-            }
-        }*/
+    }
+
+    //For emergencies
+    public void setSlideControllerPowerNoLimit(double power){
+        slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        if (power == -1){
+            power = -slideSpeed;
+        }
+        if (power == 1){
+            power = slideSpeed;
+        }
+
+        slideMotor.setPower(power);
     }
 
     //For the instances where I need to get the values of the defaults
@@ -314,6 +245,12 @@ public class NewIntakeOuttake {
 
     //For checking if the slide is currently in motion with a default position
     public boolean isSlideGoingToPos(){return (slideMotor.getMode()==DcMotor.RunMode.RUN_TO_POSITION);}
+
+    //Reset the slideMotor separately
+    public void resetSlideMotorEncoder(){
+        slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        telemetry.addLine("Resetted slide Encoder");
+    }
 
 
     //======================Arm Stuff=========================
@@ -364,14 +301,8 @@ public class NewIntakeOuttake {
         //Solution to previous problem was to take these out, but it caused jittering. Needs more testing
         //armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //armMotor.setPower(0);
-
-        //if (getArmPos()<(targetPos+5) && getArmPos()>(targetPos-5)){
-        //    //armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //    //armMotor.setPower(0);
-        //}
     }
 
-    //TODO
     public void setArmControllerPower(double power){
         //armMotor.setPower(0);
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -406,31 +337,19 @@ public class NewIntakeOuttake {
         else{
             armMotor.setPower(0);
         }
-        /*else{
-            telemetry.addLine("You suck charlie");
-            if (pos>= armMax){
-                if (power<0){
-                    armMotor.setPower(power);
-                }
-                else {
-                    //armMotor.setTargetPosition(max);
-                    armMotor.setPower(0);
-                }
-            }
-            else if (pos< armMin){
-                if (power>0){
-                    armMotor.setPower(power);
-                }
-                else {
-                    //armMotor.setTargetPosition(min);
-                    armMotor.setPower(0);
-                }
-            }
-            //Catch weirdness
-            else{
-                armMotor.setPower(0);
-            }
-        }*/
+    }
+
+    //For emergencies
+    public void setArmControllerPowerNoLimit(double power){
+        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        if (power == -1){
+            power = -armSpeed;
+        }
+        if (power == 1){
+            power = armSpeed;
+        }
+
+        armMotor.setPower(power);
     }
 
     //For the instances where I need to get the values of the defaults
@@ -441,9 +360,15 @@ public class NewIntakeOuttake {
     //For checking if the arm is currently in motion with a default position
     public boolean isArmGoingToPos(){return (armMotor.getMode()==DcMotor.RunMode.RUN_TO_POSITION);}
 
-    //Checking if slide is in ok pos first
+    //Checking if slide is in ok pos. first
     public boolean armOKMove(){
         return !(slideMotor.getCurrentPosition()>=1000); //TODO see if team wants this
+    }
+
+    //Reset the armMotor separately
+    public void resetArmMotorEncoder(){
+        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        telemetry.addLine("Resetted arm Encoder");
     }
 
     //===================Claw Stuff===================
