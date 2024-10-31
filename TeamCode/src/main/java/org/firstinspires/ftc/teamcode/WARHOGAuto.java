@@ -321,7 +321,7 @@ public class WARHOGAuto extends LinearOpMode {
 
         //Blocks to run for different start positions
         if(left){
-            if(actionCombination==ActionCombination.NET_ONLY){
+            if(actionCombination==ActionCombination.NET_ONLY){ //TODO TEST
                 //Yea
             }
             if(actionCombination==ActionCombination.SPECIMEN_ONLY){
@@ -345,13 +345,18 @@ public class WARHOGAuto extends LinearOpMode {
             }
             if(actionCombination==ActionCombination.PARK_ONLY){
                 if (parkPos==ParkPos.ASCENT){
+                    drivetrain.MoveForDis(4, speed);
+                    sleep(500);
                     drivetrain.SideMoveForDis(-30, speed);
                     sleep(1000);
                     drivetrain.MoveForDis(52, speed);
                     sleep(1000);
-                    drivetrain.RotateForDegree(-90, speed/2);
+                    drivetrain.RotateForDegree(110, speed/2);
+                    //drivetrain.rotateToPosition(180, speed/2);
                     sleep(1000);
-                    drivetrain.MoveForDis(-24, speed);
+                    newIntakeOuttake.setArmByDefault(NewIntakeOuttake.armPos.UPRIGHT);
+                    sleep(1000);
+                    drivetrain.MoveForDis(-19, speed/2);
                     sleep(1000);
                     newIntakeOuttake.setArmByDefault(NewIntakeOuttake.armPos.UPRIGHT);
                 }
@@ -360,6 +365,7 @@ public class WARHOGAuto extends LinearOpMode {
                 }
             }
 
+            telemetry.addLine("Auto Complete");
             telemetry.update();
         }
         else if(right){
@@ -392,9 +398,13 @@ public class WARHOGAuto extends LinearOpMode {
                 }
                 if (parkPos==ParkPos.OBSERVATION){
                     //Easy
+                    drivetrain.MoveForDis(4, speed);
+                    sleep(500);
                     drivetrain.SideMoveForDis(40, speed);
                 }
             }
+
+            telemetry.addLine("Auto Complete");
             telemetry.update();
         }
 

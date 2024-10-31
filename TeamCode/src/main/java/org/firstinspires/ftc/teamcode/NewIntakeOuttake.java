@@ -14,11 +14,11 @@ public class NewIntakeOuttake {
 
     private Telemetry telemetry;
 
-    final int slideMax = 7500;
+    final int slideMax = 7780;
     final int slideMin = 0;
 
     final int armMin = 0;
-    final int armMax = 550; //~650
+    final int armMax = 600; //~650
 
     final static int motorLimitBuffer = 100;
 
@@ -28,7 +28,7 @@ public class NewIntakeOuttake {
     final static double armSpeed = .25;
 
     //enum slideHeight {MINIMUM, LOW, MEDIUM, HIGH, MAX}
-    enum slideHeight {MINIMUM(0), LOW(2000), MEDIUM(4500), HIGH(6500), MAX(7000);
+    enum slideHeight {MINIMUM(0), LOW(3400), MEDIUM(3700), HIGH(7700), MAX(7750);
         private int value;
 
         private slideHeight(int value) {
@@ -301,6 +301,35 @@ public class NewIntakeOuttake {
         //Solution to previous problem was to take these out, but it caused jittering. Needs more testing
         //armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //armMotor.setPower(0);
+    }
+
+    //Set an arm height not as a default
+    public void setArm(int position) {
+
+        if (position <= armMax && position >= armMin) {
+            armMotor.setTargetPosition(position);
+        }
+        else{
+            telemetry.addLine("Error invalid position");
+        }
+
+
+        //if(armMotor.getTargetPosition() < 100 && armOKMove()){
+        //    armMotor.setTargetPosition(100);
+        //}
+
+        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        armMotor.setPower(armSpeed);
+        while (armMotor.isBusy()) {
+            telemetry.addLine("Set Arm Height");
+            telemetry.addData("Arm Position", armMotor.getCurrentPosition());
+            telemetry.addData("Arm Target", armMotor.getTargetPosition());
+            telemetry.addData("Arm Power", armMotor.getPower());
+            telemetry.addData("Mode", armMotor.getMode());
+            telemetry.update();
+        }
+        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        armMotor.setPower(0);
     }
 
     public void setArmControllerPower(double power){

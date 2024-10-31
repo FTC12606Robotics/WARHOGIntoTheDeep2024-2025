@@ -194,27 +194,12 @@ public class WARHOGTeleOp extends LinearOpMode {
             //defined arm positions
             if(uprightArmPos){
                 newIntakeOuttake.setArmByDefaultNoWait(NewIntakeOuttake.armPos.UPRIGHT);
-                /*int armTarget = newIntakeOuttake.defaultArmValue(NewIntakeOuttake.armPos.UPRIGHT);
-                if (newIntakeOuttake.getArmPos()<(armTarget+5) && newIntakeOuttake.getArmPos()>(armTarget-5)){
-                    newIntakeOuttake.armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    newIntakeOuttake.armMotor.setPower(0);
-                }*/
             }
             if(downArmPos){
                 newIntakeOuttake.setArmByDefaultNoWait(NewIntakeOuttake.armPos.DOWN);
-                /*int armTarget = newIntakeOuttake.defaultArmValue(NewIntakeOuttake.armPos.DOWN);
-                if (newIntakeOuttake.getArmPos()<(armTarget+5) && newIntakeOuttake.getArmPos()>(armTarget-5)){
-                    newIntakeOuttake.armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    newIntakeOuttake.armMotor.setPower(0);
-                }*/
             }
             if(sizingArmPos){
                 newIntakeOuttake.setArmByDefaultNoWait(NewIntakeOuttake.armPos.SIZING);
-                /*int armTarget = newIntakeOuttake.defaultArmValue(NewIntakeOuttake.armPos.SIZING);
-                if (newIntakeOuttake.getArmPos()<(armTarget+5) && newIntakeOuttake.getArmPos()>(armTarget-5)){
-                    newIntakeOuttake.armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    newIntakeOuttake.armMotor.setPower(0);
-                }*/
             }
             armPos = newIntakeOuttake.getArmPos();
 
@@ -255,43 +240,18 @@ public class WARHOGTeleOp extends LinearOpMode {
             //defined slide positions
             if(slideMinimumPos){
                 newIntakeOuttake.setSlideHeightNoWait(NewIntakeOuttake.slideHeight.MINIMUM);
-                /*int slideTarget = newIntakeOuttake.defaultSlideValue(NewIntakeOuttake.slideHeight.MINIMUM);
-                if (newIntakeOuttake.getSlidePos()<(slideTarget+5) && newIntakeOuttake.getSlidePos()>(slideTarget-5)){
-                    newIntakeOuttake.slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    newIntakeOuttake.slideMotor.setPower(0);
-                }*/
             }
             if(slideLowPos){
                 newIntakeOuttake.setSlideHeightNoWait(NewIntakeOuttake.slideHeight.LOW);
-                /*int slideTarget = newIntakeOuttake.defaultSlideValue(NewIntakeOuttake.slideHeight.LOW);
-                if (newIntakeOuttake.getSlidePos()<(slideTarget+5) && newIntakeOuttake.getSlidePos()>(slideTarget-5)){
-                    newIntakeOuttake.slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    newIntakeOuttake.slideMotor.setPower(0);
-                }*/
             }
             if(slideMediumPos){
                 newIntakeOuttake.setSlideHeightNoWait(NewIntakeOuttake.slideHeight.MEDIUM);
-                /*int slideTarget = newIntakeOuttake.defaultSlideValue(NewIntakeOuttake.slideHeight.MEDIUM);
-                if (newIntakeOuttake.getSlidePos()<(slideTarget+5) && newIntakeOuttake.getSlidePos()>(slideTarget-5)){
-                    newIntakeOuttake.slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    newIntakeOuttake.slideMotor.setPower(0);
-                }*/
             }
             if(slideHighPos){
                 newIntakeOuttake.setSlideHeightNoWait(NewIntakeOuttake.slideHeight.HIGH);
-                /*int slideTarget = newIntakeOuttake.defaultSlideValue(NewIntakeOuttake.slideHeight.HIGH);
-                if (newIntakeOuttake.getSlidePos()<(slideTarget+5) && newIntakeOuttake.getSlidePos()>(slideTarget-5)){
-                    newIntakeOuttake.slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    newIntakeOuttake.slideMotor.setPower(0);
-                }*/
             }
             if(slideMaxPos){
                 newIntakeOuttake.setSlideHeightNoWait(NewIntakeOuttake.slideHeight.MAX);
-                /*int slideTarget = newIntakeOuttake.defaultSlideValue(NewIntakeOuttake.slideHeight.MAX);
-                if (newIntakeOuttake.getSlidePos()<(slideTarget+5) && newIntakeOuttake.getSlidePos()>(slideTarget-5)){
-                    newIntakeOuttake.slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    newIntakeOuttake.slideMotor.setPower(0);
-                }*/
             }
             slidePos = newIntakeOuttake.getSlidePos(); //Update other counter
 
