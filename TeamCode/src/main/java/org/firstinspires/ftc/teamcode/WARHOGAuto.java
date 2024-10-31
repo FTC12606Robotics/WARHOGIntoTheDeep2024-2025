@@ -44,7 +44,7 @@ public class WARHOGAuto extends LinearOpMode {
     boolean useCamera = true; //for testing to say if it will use the camera
 
     double speed = .50;
-    double startSleep = 1; //How many
+    double startSleep = 0; //How many
     // seconds to wait before starting autonomous
 
     //this stuff does not need to be changed
@@ -321,8 +321,38 @@ public class WARHOGAuto extends LinearOpMode {
 
         //Blocks to run for different start positions
         if(left){
-            if(actionCombination==ActionCombination.NET_ONLY){ //TODO TEST
+            if(actionCombination==ActionCombination.NET_ONLY){
                 //Yea
+                drivetrain.MoveForDis(4, speed);
+                sleep(500);
+                //drivetrain.RotateForDegree(110, speed/2);
+                //sleep(1000);
+                //drivetrain.MoveForDis(48, speed);
+                //sleep(1000);
+                drivetrain.SideMoveForDis(-46, speed);
+                sleep(500);
+                newIntakeOuttake.setArmByDefault(NewIntakeOuttake.armPos.UPRIGHT);
+                sleep(600);
+                drivetrain.RotateForDegree(175, speed/2);
+                sleep(1000);
+                newIntakeOuttake.setSlideHeight(NewIntakeOuttake.slideHeight.MAX);
+                sleep(900);
+                newIntakeOuttake.setArm(470);
+                sleep(400);
+                newIntakeOuttake.openClaw();
+                sleep(200);
+                newIntakeOuttake.closeClaw();
+                //Don't think we need a pause here
+                newIntakeOuttake.setArmByDefault(NewIntakeOuttake.armPos.UPRIGHT);
+                sleep(1000);
+                drivetrain.RotateForDegree(-65, speed/2);
+                sleep(700);
+                newIntakeOuttake.retractSlide();
+                sleep(700);
+                drivetrain.MoveForDis(-6, speed); //So we don't hit the pole
+                sleep(700);
+                newIntakeOuttake.setArmByDefault(NewIntakeOuttake.armPos.DOWN);
+
             }
             if(actionCombination==ActionCombination.SPECIMEN_ONLY){
                 //OK?
@@ -330,6 +360,34 @@ public class WARHOGAuto extends LinearOpMode {
             if(actionCombination==ActionCombination.NET_PARK){
                 if (parkPos==ParkPos.ASCENT){
                     //Yea
+                    drivetrain.MoveForDis(4, speed);
+                    sleep(200);
+                    drivetrain.SideMoveForDis(-46, speed);
+                    sleep(500);
+                    newIntakeOuttake.setArmByDefault(NewIntakeOuttake.armPos.UPRIGHT);
+                    sleep(200);
+                    drivetrain.RotateForDegree(175, speed/2);
+                    sleep(700);
+                    newIntakeOuttake.setSlideHeight(NewIntakeOuttake.slideHeight.MAX);
+                    sleep(800);
+                    newIntakeOuttake.setArm(470);
+                    sleep(400);
+                    newIntakeOuttake.openClaw();
+                    sleep(200);
+                    newIntakeOuttake.closeClaw();
+                    //Don't think we need a pause here
+                    newIntakeOuttake.setArmByDefault(NewIntakeOuttake.armPos.UPRIGHT);
+                    sleep(800);
+                    drivetrain.RotateForDegree(-65, speed/2);
+                    sleep(400);
+                    newIntakeOuttake.retractSlide();
+                    //drivetrain.MoveForDis(-6, speed); //So we don't hit the pole
+                    sleep(500);
+                    drivetrain.SideMoveForDis(48, speed);
+                    sleep(1000);
+                    drivetrain.MoveForDis(-30, speed);
+                    drivetrain.MoveForDis(-5, speed/2);
+
                 }
                 if (parkPos==ParkPos.OBSERVATION){
                     //Why?/prob not
