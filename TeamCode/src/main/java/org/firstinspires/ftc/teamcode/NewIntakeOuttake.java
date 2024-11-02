@@ -28,7 +28,7 @@ public class NewIntakeOuttake {
     final static double armSpeed = .25;
 
     //enum slideHeight {MINIMUM, LOW, MEDIUM, HIGH, MAX}
-    enum slideHeight {MINIMUM(0), LOW(3400), MEDIUM(3700), HIGH(7700), MAX(7750);
+    enum slideHeight {MINIMUM(0), LOW(3400), MEDIUM(3700), HIGH(7700), MAX(7730);
         private int value;
 
         private slideHeight(int value) {
@@ -41,7 +41,7 @@ public class NewIntakeOuttake {
     }
 
     //enum armPos {UPRIGHT, DOWN, SIZING}
-    enum armPos {UPRIGHT(500), DOWN(0), SIZING(100);
+    enum armPos {UPRIGHT(550), DOWN(0), SIZING(100);
        private int value;
 
        private armPos(int value) {
