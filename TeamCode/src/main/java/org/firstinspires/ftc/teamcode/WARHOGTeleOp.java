@@ -6,8 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-//import com.qualcomm.robotcore.hardware.DcMotor; //Take out when have good code
-
 @TeleOp(name="WARHOGTeleOp", group="")
 public class WARHOGTeleOp extends LinearOpMode {
     public WARHOGTeleOp() throws InterruptedException {}
@@ -234,7 +232,7 @@ public class WARHOGTeleOp extends LinearOpMode {
 
             //TODO FOR TEST
             if (PIDTEST){
-                newIntakeOuttake.setSlideHeightPID(NewIntakeOuttake.slideHeight.HIGH);
+                newIntakeOuttake.setSlideHeightPID(NewIntakeOuttake.slideHeight.MEDIUM);
             }
 
             //defined slide positions

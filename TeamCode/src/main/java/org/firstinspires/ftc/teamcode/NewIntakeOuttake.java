@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class NewIntakeOuttake {
-    public DcMotor slideMotor; //Change later when get good code
-    public DcMotor armMotor; //Change later when get good code
+    private DcMotor slideMotor;
+    private DcMotor armMotor;
     private Servo clawServo;
 
     private Telemetry telemetry;
@@ -18,14 +18,14 @@ public class NewIntakeOuttake {
     final int slideMin = 0;
 
     final int armMin = 0;
-    final int armMax = 600; //~650
+    final int armMax = 1250;
 
     final static int motorLimitBuffer = 100;
 
     final static double clawOpen = .40;
     final static double clawClose = 0.54;
     final static double slideSpeed = 1;
-    final static double armSpeed = .25;
+    final static double armSpeed = .40;
 
     //enum slideHeight {MINIMUM, LOW, MEDIUM, HIGH, MAX}
     enum slideHeight {MINIMUM(0), LOW(3400), MEDIUM(3700), HIGH(7700), MAX(7730);
