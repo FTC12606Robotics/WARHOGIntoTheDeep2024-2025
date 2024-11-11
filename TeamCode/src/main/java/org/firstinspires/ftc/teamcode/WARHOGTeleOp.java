@@ -197,7 +197,7 @@ public class WARHOGTeleOp extends LinearOpMode {
                 newIntakeOuttake.setArmByDefaultNoWait(NewIntakeOuttake.armPos.DOWN);
             }
             if(sizingArmPos){
-                newIntakeOuttake.setArmByDefaultNoWait(NewIntakeOuttake.armPos.SIZING);
+                newIntakeOuttake.setArmByDefaultNoWait(NewIntakeOuttake.armPos.SUBSIZING);
             }
             armPos = newIntakeOuttake.getArmPos();
 

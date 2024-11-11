@@ -41,7 +41,7 @@ public class NewIntakeOuttake {
     }
 
     //enum armPos {UPRIGHT, DOWN, SIZING}
-    enum armPos {UPRIGHT(550), DOWN(0), SIZING(100);
+    enum armPos {UPRIGHT(1200), DOWN(0), SUBSIZING(350);
        private int value;
 
        private armPos(int value) {
