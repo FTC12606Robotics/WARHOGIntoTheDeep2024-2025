@@ -86,7 +86,7 @@ public class NewIntakeOuttake {
         telemetry.addLine("Resought Motor Encoders");
     }
 
-    //For future use
+    //For future use, no worky
     /*public double motorAmps(){
         double slideAmps = slideMotor.getCurrent();
         double armAmps = armMotor.getCurrent();
@@ -189,6 +189,7 @@ public class NewIntakeOuttake {
     }
 
     public void setSlideControllerPower(double power){
+        int SlideMax = slideMax; //For the soft limit
         slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         if (power == -1){
             power = -slideSpeed;
@@ -197,22 +198,26 @@ public class NewIntakeOuttake {
             power = slideSpeed;
         }
 
-        //int pos = getSlidePos();
         int pos = slideMotor.getCurrentPosition();
 
+        //for the soft limit
+        if (getArmPos() <= 300){
+            SlideMax = 7000;
+        }
+
         // Approach limits with reduced speed
-        if (pos >= (slideMax - motorLimitBuffer) && power > 0) {
+        if (pos >= (SlideMax - motorLimitBuffer) && power > 0) {
             power = power/2; // Slow down as it approaches max
         }
         else if (pos <= (slideMin + motorLimitBuffer) && power < 0) {
             power = power/2; // Slow down as it approaches min
         }
 
-        if (pos< slideMax && pos> slideMin){
+        if (pos< SlideMax && pos> slideMin){
             telemetry.addData("slide power: T1", power);
             slideMotor.setPower(power);
         }
-        else if (pos>=slideMax && power<0){
+        else if (pos>=SlideMax && power<0){
             telemetry.addData("slide power: T2", power);
             slideMotor.setPower(power);
         }
@@ -260,10 +265,6 @@ public class NewIntakeOuttake {
 
         armMotor.setTargetPosition(position.getValue());
 
-        //if(armMotor.getTargetPosition() < 100 && armOKMove()){
-        //    armMotor.setTargetPosition(100);
-        //}
-
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armMotor.setPower(armSpeed);
         while(armMotor.isBusy()) {
@@ -282,10 +283,6 @@ public class NewIntakeOuttake {
     public void setArmByDefaultNoWait(armPos position){
 
         armMotor.setTargetPosition(position.getValue());
-
-        //if(armMotor.getTargetPosition() < 100 && armOKMove()){
-        //    armMotor.setTargetPosition(100);
-        //}
 
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armMotor.setPower(armSpeed);
@@ -312,11 +309,6 @@ public class NewIntakeOuttake {
         else{
             telemetry.addLine("Error invalid position");
         }
-
-
-        //if(armMotor.getTargetPosition() < 100 && armOKMove()){
-        //    armMotor.setTargetPosition(100);
-        //}
 
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armMotor.setPower(armSpeed);
