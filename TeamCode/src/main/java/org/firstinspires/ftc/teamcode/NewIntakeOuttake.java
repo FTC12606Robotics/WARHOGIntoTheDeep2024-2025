@@ -14,11 +14,11 @@ public class NewIntakeOuttake {
 
     private Telemetry telemetry;
 
-    final int slideMax = 7780;
+    final int slideMax = 6670;
     final int slideMin = 0;
 
     final int armMin = 0;
-    final int armMax = 1250;
+    final int armMax = 1280;
 
     final static int motorLimitBuffer = 100;
 
@@ -28,7 +28,7 @@ public class NewIntakeOuttake {
     final static double armSpeed = .40;
 
     //enum slideHeight {MINIMUM, LOW, MEDIUM, HIGH, MAX}
-    enum slideHeight {MINIMUM(0), LOW(3400), MEDIUM(3700), HIGH(7700), MAX(7730);
+    enum slideHeight {MINIMUM(0), LOW(1600), MEDIUM(3300), HIGH(5500), MAX(6650);
         private int value;
 
         private slideHeight(int value) {
@@ -55,9 +55,9 @@ public class NewIntakeOuttake {
 
       //For PID
     double integralSum = 0;
-    final double Kp = 0.03;
+    final double Kp = 0.013;
     final double Ki = 0.00;
-    final double Kd = 0.01;
+    final double Kd = 0.00;
 
     ElapsedTime timer = new ElapsedTime();
     private double lastError = 0;
@@ -201,8 +201,8 @@ public class NewIntakeOuttake {
         int pos = slideMotor.getCurrentPosition();
 
         //for the soft limit
-        if (getArmPos() <= 300){
-            SlideMax = 7000;
+        if (getArmPos() <= 400){
+            SlideMax = 6300;
         }
 
         // Approach limits with reduced speed
