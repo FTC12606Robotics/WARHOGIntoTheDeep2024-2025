@@ -18,12 +18,12 @@ public class NewIntakeOuttake {
     final int slideMin = 0;
 
     final int armMin = 0;
-    final int armMax = 1280;
+    final int armMax = 1250;
 
     final static int motorLimitBuffer = 100;
 
     final static double clawOpen = .40;
-    final static double clawClose = 0.54;
+    final static double clawClose = 0.52;
     final static double slideSpeed = 1;
     final static double armSpeed = .40;
 
@@ -41,7 +41,7 @@ public class NewIntakeOuttake {
     }
 
     //enum armPos {UPRIGHT, DOWN, SIZING}
-    enum armPos {UPRIGHT(1200), DOWN(0), SUBSIZING(350);
+    enum armPos {UPRIGHT(1230), DOWN(0), SUBSIZING(370);
        private int value;
 
        private armPos(int value) {
@@ -189,6 +189,7 @@ public class NewIntakeOuttake {
     }
 
     public void setSlideControllerPower(double power){
+        telemetry.addData("This is the power to func.", power);
         int SlideMax = slideMax; //For the soft limit
         slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         if (power == -1){

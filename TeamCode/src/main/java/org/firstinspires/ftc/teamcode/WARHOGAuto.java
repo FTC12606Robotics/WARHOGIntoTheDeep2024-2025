@@ -44,8 +44,7 @@ public class WARHOGAuto extends LinearOpMode {
     boolean useCamera = true; //for testing to say if it will use the camera
 
     double speed = .50;
-    double startSleep = 0; //How many
-    // seconds to wait before starting autonomous
+    double startSleep = 0; //How many seconds to wait before starting autonomous
 
     //this stuff does not need to be changed
     // Lens intrinsics
@@ -104,8 +103,6 @@ public class WARHOGAuto extends LinearOpMode {
 
         //init loop
         while (!isStarted() && !isStopRequested()) {
-            //Run the robot arm to its starting position
-            //intake.runArm(Intake.Height.STARTSIZING);
 
             //set up inputs - have previous so that you can check rising edge
             try {
@@ -164,13 +161,13 @@ public class WARHOGAuto extends LinearOpMode {
 
             //To set where to park
             if (currentGamepad1.right_bumper && !previousGamepad1.right_bumper) {
-                if(parkPos == ParkPos.ASCENT){
+                if (parkPos == ParkPos.NO){ //Only runs on init
+                    parkPos = ParkPos.ASCENT;
+                }
+                else if(parkPos == ParkPos.ASCENT){
                     parkPos = ParkPos.OBSERVATION;
                 }
                 else if (parkPos == ParkPos.OBSERVATION){
-                    parkPos = ParkPos.NO;
-                }
-                else if (parkPos == ParkPos.NO){
                     parkPos = ParkPos.ASCENT;
                 }
             }
@@ -287,11 +284,11 @@ public class WARHOGAuto extends LinearOpMode {
             }*/
 
             telemetry.update();
-            sleep(20);
+            sleep(10);
         }
 
 
-        //Start command just came in
+        //=============Start command just came in================
 
         //Stop the camera
         //camera.stopStreaming();
@@ -314,7 +311,7 @@ public class WARHOGAuto extends LinearOpMode {
                 break;
         }
 
-        //2023-2024 Autonomous Main Code:
+        //2024-2025 Autonomous Main Code:
 
         //Wait
         sleep((long)((startSleep)*1000));
@@ -324,33 +321,29 @@ public class WARHOGAuto extends LinearOpMode {
             if(actionCombination==ActionCombination.NET_ONLY){
                 //Yea
                 drivetrain.MoveForDis(4, speed);
-                sleep(500);
-                //drivetrain.RotateForDegree(110, speed/2);
-                //sleep(1000);
-                //drivetrain.MoveForDis(48, speed);
-                //sleep(1000);
+                sleep(100);
                 drivetrain.SideMoveForDis(-46, speed);
-                sleep(500);
+                sleep(300);
                 newIntakeOuttake.setArmByDefault(NewIntakeOuttake.armPos.UPRIGHT);
-                sleep(600);
-                drivetrain.RotateForDegree(175, speed/2);
-                sleep(1000);
+                sleep(100);
+                drivetrain.RotateForDegree(170, speed/2);
+                sleep(500);
                 newIntakeOuttake.setSlideHeight(NewIntakeOuttake.slideHeight.MAX);
-                sleep(900);
-                newIntakeOuttake.setArm(470);
+                sleep(750);
+                newIntakeOuttake.setArm(1050);
                 sleep(400);
                 newIntakeOuttake.openClaw();
                 sleep(200);
                 newIntakeOuttake.closeClaw();
                 //Don't think we need a pause here
                 newIntakeOuttake.setArmByDefault(NewIntakeOuttake.armPos.UPRIGHT);
-                sleep(1000);
-                drivetrain.RotateForDegree(-65, speed/2);
-                sleep(700);
+                sleep(800);
+                drivetrain.RotateForDegree(-60, speed/2);
+                sleep(200);
                 newIntakeOuttake.retractSlide();
-                sleep(700);
-                drivetrain.MoveForDis(-6, speed); //So we don't hit the pole
-                sleep(700);
+                sleep(200);
+                drivetrain.MoveForDis(-6, speed); //So we don't hit the pole?
+                sleep(300);
                 newIntakeOuttake.setArmByDefault(NewIntakeOuttake.armPos.DOWN);
 
             }
@@ -361,7 +354,7 @@ public class WARHOGAuto extends LinearOpMode {
                 if (parkPos==ParkPos.ASCENT){
                     //Yea
                     drivetrain.MoveForDis(4, speed);
-                    sleep(200);
+                    sleep(100);
                     drivetrain.SideMoveForDis(-46, speed);
                     sleep(500);
                     newIntakeOuttake.setArmByDefault(NewIntakeOuttake.armPos.UPRIGHT);
@@ -370,7 +363,7 @@ public class WARHOGAuto extends LinearOpMode {
                     sleep(700);
                     newIntakeOuttake.setSlideHeight(NewIntakeOuttake.slideHeight.MAX);
                     sleep(800);
-                    newIntakeOuttake.setArm(470);
+                    newIntakeOuttake.setArm(1070);
                     sleep(400);
                     newIntakeOuttake.openClaw();
                     sleep(200);
@@ -381,10 +374,10 @@ public class WARHOGAuto extends LinearOpMode {
                     drivetrain.RotateForDegree(-65, speed/2);
                     sleep(400);
                     newIntakeOuttake.retractSlide();
-                    //drivetrain.MoveForDis(-6, speed); //So we don't hit the pole
-                    sleep(500);
-                    drivetrain.SideMoveForDis(48, speed);
-                    sleep(1000);
+                    //drivetrain.MoveForDis(-6, speed);
+                    sleep(400);
+                    drivetrain.SideMoveForDis(44, speed);
+                    sleep(800);
                     drivetrain.MoveForDis(-30, speed);
                     drivetrain.MoveForDis(-5, speed/2);
 
@@ -398,28 +391,26 @@ public class WARHOGAuto extends LinearOpMode {
                     //Possible
                 }
                 if (parkPos==ParkPos.OBSERVATION){
-                    //Prob not
+                    //NO
                 }
+                telemetry.addLine("Ummm, what are you doing?");
             }
             if(actionCombination==ActionCombination.PARK_ONLY){
                 if (parkPos==ParkPos.ASCENT){
                     drivetrain.MoveForDis(4, speed);
-                    sleep(500);
-                    drivetrain.SideMoveForDis(-30, speed);
-                    sleep(1000);
-                    drivetrain.MoveForDis(52, speed);
-                    sleep(1000);
+                    sleep(100);
+                    drivetrain.SideMoveForDis(-26, speed);
+                    sleep(600);
+                    drivetrain.MoveForDis(47, speed);
+                    sleep(700);
                     drivetrain.RotateForDegree(110, speed/2);
-                    //drivetrain.rotateToPosition(180, speed/2);
-                    sleep(1000);
+                    sleep(600);
                     newIntakeOuttake.setArmByDefault(NewIntakeOuttake.armPos.UPRIGHT);
-                    sleep(1000);
-                    drivetrain.MoveForDis(-19, speed/2);
-                    sleep(1000);
-                    newIntakeOuttake.setArmByDefault(NewIntakeOuttake.armPos.UPRIGHT);
+                    sleep(800);
+                    drivetrain.MoveForDis(-15, speed/2);
                 }
-                if (parkPos==ParkPos.OBSERVATION){
-                    //Could but prob not
+                else{
+                    telemetry.addLine("ERROR: STARTED LEFT; PARK POS.: OBSERVATION/NO  #No can do.");
                 }
             }
 
@@ -427,11 +418,27 @@ public class WARHOGAuto extends LinearOpMode {
             telemetry.update();
         }
         else if(right){
-            if(actionCombination==ActionCombination.NET_ONLY){
-                //Probably don't want to do this
-            }
             if(actionCombination==ActionCombination.SPECIMEN_ONLY){
-                //YES/TODO
+                //YES TODO never been done
+                drivetrain.MoveForDis(24, speed);
+                sleep(1000);
+                drivetrain.SideMoveForDis(-12, speed);
+                sleep(1000);
+                newIntakeOuttake.setArmByDefault(NewIntakeOuttake.armPos.UPRIGHT);
+                sleep(1000);
+                newIntakeOuttake.setSlideHeight(NewIntakeOuttake.slideHeight.LOW);
+                sleep(1000);
+                newIntakeOuttake.setArm(300);
+                sleep(1000);
+                //retract a little to clip the specimen on the pole
+                newIntakeOuttake.retractSlide();
+                sleep(1000);
+                newIntakeOuttake.setArmByDefault(NewIntakeOuttake.armPos.DOWN);
+                sleep(1000);
+                newIntakeOuttake.openClaw();
+                sleep(1000);
+                drivetrain.SideMoveForDis(12, speed);
+
             }
             if(actionCombination==ActionCombination.NET_PARK){
                 //Probably don't want to do net
@@ -440,25 +447,44 @@ public class WARHOGAuto extends LinearOpMode {
                 }
                 if (parkPos==ParkPos.OBSERVATION){
                     //Ok to park if don't do net
+                    drivetrain.MoveForDis(4, speed);
+                    sleep(200);
+                    drivetrain.SideMoveForDis(40, speed);
                 }
             }
             if(actionCombination==ActionCombination.SPECIMEN_PARK){
-                if (parkPos==ParkPos.ASCENT){
-                    //Prob not
-                }
                 if (parkPos==ParkPos.OBSERVATION){
                     //Yea
+                    drivetrain.MoveForDis(24, speed);
+                    sleep(1000);
+                    drivetrain.SideMoveForDis(-12, speed);
+                    sleep(1000);
+                    newIntakeOuttake.setArmByDefault(NewIntakeOuttake.armPos.UPRIGHT);
+                    sleep(1000);
+                    newIntakeOuttake.setSlideHeight(NewIntakeOuttake.slideHeight.LOW);
+                    sleep(1000);
+                    newIntakeOuttake.setArm(300); //TODO
+                    sleep(1000);
+                    //retract a little to clip the specimen on the pole
+                    newIntakeOuttake.retractSlide();
+                    sleep(1000);
+                    newIntakeOuttake.setArmByDefault(NewIntakeOuttake.armPos.DOWN);
+                    sleep(1000);
+                    newIntakeOuttake.openClaw();
+                    sleep(1000);
+                    drivetrain.MoveForDis(-20, speed);
+                    sleep(1000);
+                    drivetrain.SideMoveForDis(30, speed);
                 }
             }
             if(actionCombination==ActionCombination.PARK_ONLY){
-                if (parkPos==ParkPos.ASCENT){
-                    //Prob not
-                }
                 if (parkPos==ParkPos.OBSERVATION){
-                    //Easy
                     drivetrain.MoveForDis(4, speed);
-                    sleep(500);
+                    sleep(200);
                     drivetrain.SideMoveForDis(40, speed);
+                }
+                else{
+                    telemetry.addLine("ERROR: STARTED RIGHT; PARK POS.: ASCENT/NO  #No can do.");
                 }
             }
 
