@@ -354,32 +354,31 @@ public class WARHOGAuto extends LinearOpMode {
                 if (parkPos==ParkPos.ASCENT){
                     //Yea
                     drivetrain.MoveForDis(4, speed);
-                    sleep(100);
+                    sleep(50);
                     drivetrain.SideMoveForDis(-46, speed);
-                    sleep(500);
+                    //sleep(100);
                     newIntakeOuttake.setArmByDefault(NewIntakeOuttake.armPos.UPRIGHT);
-                    sleep(200);
-                    drivetrain.RotateForDegree(175, speed/2);
-                    sleep(700);
+                    //sleep(100);
+                    drivetrain.RotateForDegree(170, speed/2);
+                    sleep(150);
                     newIntakeOuttake.setSlideHeight(NewIntakeOuttake.slideHeight.MAX);
-                    sleep(800);
-                    newIntakeOuttake.setArm(1070);
+                    sleep(750);
+                    newIntakeOuttake.setArm(1050);
                     sleep(400);
                     newIntakeOuttake.openClaw();
                     sleep(200);
                     newIntakeOuttake.closeClaw();
                     //Don't think we need a pause here
                     newIntakeOuttake.setArmByDefault(NewIntakeOuttake.armPos.UPRIGHT);
-                    sleep(800);
-                    drivetrain.RotateForDegree(-65, speed/2);
-                    sleep(400);
+                    sleep(500);
+                    drivetrain.RotateForDegree(-54, speed/2);
+                    //sleep(100);
                     newIntakeOuttake.retractSlide();
-                    //drivetrain.MoveForDis(-6, speed);
+                    //sleep(100);
+                    drivetrain.SideMoveForDis(44.5, speed);
                     sleep(400);
-                    drivetrain.SideMoveForDis(44, speed);
-                    sleep(800);
                     drivetrain.MoveForDis(-30, speed);
-                    drivetrain.MoveForDis(-5, speed/2);
+                    drivetrain.MoveForDis(-8, speed/1.4);
 
                 }
                 if (parkPos==ParkPos.OBSERVATION){
