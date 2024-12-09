@@ -203,7 +203,7 @@ public class NewIntakeOuttake {
 
         //for the soft limit
         if (getArmPos() <= 400){
-            SlideMax = 6300;
+            SlideMax = 5250;
         }
 
         // Approach limits with reduced speed

@@ -16,8 +16,8 @@ public class WARHOGAuto extends LinearOpMode {
 
     public WARHOGAuto() throws InterruptedException {}
 
-    private StartPosColor startPosColor = StartPosColor.RED; //Shouldn't matter this game
-    private enum StartPosColor {RED, BLUE}
+    //private StartPosColor startPosColor = StartPosColor.RED; //Shouldn't matter this game
+    //private enum StartPosColor {RED, BLUE}
     private StartPosPosition startPosPosition = StartPosPosition.RIGHT;
     private enum StartPosPosition {LEFT, RIGHT}
     private ParkPos parkPos = ParkPos.NO;
@@ -118,12 +118,12 @@ public class WARHOGAuto extends LinearOpMode {
             }
 
             //set up initialization procedures
-            if (currentGamepad1.b) {
+            /*if (currentGamepad1.b) {
                 startPosColor = StartPosColor.RED;
             }
             if (currentGamepad1.x) {
                 startPosColor = StartPosColor.BLUE;
-            }
+            }*/
             if (currentGamepad1.dpad_left) {
                 startPosPosition = StartPosPosition.LEFT;
             }
@@ -217,7 +217,7 @@ public class WARHOGAuto extends LinearOpMode {
                 useCamera = !useCamera;
             }
 
-            telemetry.addData("Color (b/x)", startPosColor);
+            //telemetry.addData("Color (b/x)", startPosColor);
             telemetry.addData("Start Position (left/right)", startPosPosition);
             telemetry.addData("Speed (a/y)", speed);
             telemetry.addData("startSleep (up/down)", startSleep);
@@ -294,14 +294,14 @@ public class WARHOGAuto extends LinearOpMode {
         //camera.stopStreaming();
 
         //Set modifier values
-        switch (startPosColor){
+        /*switch (startPosColor){
             case RED:
                 red = true;
                 break;
             case BLUE:
                 blue = true;
                 break;
-        }
+        }*/
         switch (startPosPosition){
             case LEFT:
                 left = true;
@@ -378,7 +378,7 @@ public class WARHOGAuto extends LinearOpMode {
                     drivetrain.SideMoveForDis(44.5, speed);
                     sleep(400);
                     drivetrain.MoveForDis(-30, speed);
-                    drivetrain.MoveForDis(-8, speed/1.4);
+                    drivetrain.MoveForDis(-8.5, speed/1.4);
 
                 }
                 if (parkPos==ParkPos.OBSERVATION){
