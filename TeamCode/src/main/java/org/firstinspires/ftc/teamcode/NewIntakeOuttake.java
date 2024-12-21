@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -14,7 +16,7 @@ public class NewIntakeOuttake {
 
     private Telemetry telemetry;
 
-    final int slideMax = 6670;
+    final int slideMax = 3400;
     final int slideMin = 0;
 
     final int armMin = 0;
@@ -28,7 +30,7 @@ public class NewIntakeOuttake {
     final static double armSpeed = .40;
 
     //enum slideHeight {MINIMUM, LOW, MEDIUM, HIGH, MAX}
-    enum slideHeight {MINIMUM(0), LOW(1600), MEDIUM(3300), HIGH(5500), MAX(6650);
+    enum slideHeight {MINIMUM(0), LOW(500), MEDIUM(2000), HIGH(3000), MAX(3400);
         private int value;
 
         private slideHeight(int value) {
@@ -64,7 +66,7 @@ public class NewIntakeOuttake {
 
     NewIntakeOuttake(HardwareMap hardwareMap, Telemetry telemetry){
         slideMotor = hardwareMap.get(DcMotor.class, "slideMotor");
-        slideMotor.setDirection(DcMotor.Direction.REVERSE);
+        slideMotor.setDirection(DcMotor.Direction.FORWARD);
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -106,6 +108,30 @@ public class NewIntakeOuttake {
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slideMotor.setPower(slideSpeed);
         while(slideMotor.isBusy()) {
+            telemetry.addLine("Set Slide Height");
+            telemetry.addData("Slide Position", slideMotor.getCurrentPosition());
+            telemetry.addData("Slide Target", slideMotor.getTargetPosition());
+            telemetry.addData("Slide Power", slideMotor.getPower());
+            telemetry.addData("Mode", slideMotor.getMode());
+            telemetry.update();
+        }
+        slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        slideMotor.setPower(0);
+    }
+
+    //Set slide extension not as a default
+    public void setSlide(int position) {
+
+        if (position <= slideMax && position >= slideMin) {
+            slideMotor.setTargetPosition(position);
+        }
+        else{
+            telemetry.addLine("Error invalid position");
+        }
+
+        slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slideMotor.setPower(slideSpeed);
+        while (slideMotor.isBusy()) {
             telemetry.addLine("Set Slide Height");
             telemetry.addData("Slide Position", slideMotor.getCurrentPosition());
             telemetry.addData("Slide Target", slideMotor.getTargetPosition());
@@ -192,12 +218,13 @@ public class NewIntakeOuttake {
         telemetry.addData("This is the power to func.", power);
         int SlideMax = slideMax; //For the soft limit
         slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        if (power == -1){
+        /*if (power < 0){
             power = -slideSpeed;
         }
-        if (power == 1){
+        if (power > 0){
             power = slideSpeed;
-        }
+        }*/
+        power = slideSpeed*power;
 
         int pos = slideMotor.getCurrentPosition();
 
@@ -234,12 +261,14 @@ public class NewIntakeOuttake {
     //For emergencies
     public void setSlideControllerPowerNoLimit(double power){
         slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        if (power == -1){
+        /*if (power < 0){
             power = -slideSpeed;
         }
-        if (power == 1){
+        if (power > 0){
             power = slideSpeed;
-        }
+        }*/
+
+        power = slideSpeed*power;
 
         slideMotor.setPower(power);
     }
@@ -328,12 +357,13 @@ public class NewIntakeOuttake {
     public void setArmControllerPower(double power){
         //armMotor.setPower(0);
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        if (power == -1){
+        /*if (power < 0){
             power = -armSpeed;
         }
-        if (power == 1){
+        if (power > 0){
             power = armSpeed;
-        }
+        }*/
+        power = armSpeed*power;
 
         //int pos = getArmPos();
         int pos = armMotor.getCurrentPosition();
@@ -364,12 +394,13 @@ public class NewIntakeOuttake {
     //For emergencies
     public void setArmControllerPowerNoLimit(double power){
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        if (power == -1){
+        /*if (power  < 0){
             power = -armSpeed;
         }
-        if (power == 1){
+        if (power > 0){
             power = armSpeed;
-        }
+        }*/
+        power = armSpeed*power;
 
         armMotor.setPower(power);
     }

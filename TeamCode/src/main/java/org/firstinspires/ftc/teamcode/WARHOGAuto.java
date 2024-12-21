@@ -23,7 +23,7 @@ public class WARHOGAuto extends LinearOpMode {
     private ParkPos parkPos = ParkPos.NO;
     private enum ParkPos {NO, ASCENT, OBSERVATION} //For where to park if at all
     private ActionCombination actionCombination = ActionCombination.PARK_ONLY;
-    private enum ActionCombination {PARK_ONLY, NET_ONLY, SPECIMEN_ONLY, NONE, NET_PARK, SPECIMEN_PARK}
+    private enum ActionCombination {PARK_ONLY, NET_ONLY, NET2, SPECIMEN_ONLY, NONE, NET_PARK, SPECIMEN_PARK}
 
     OpenCvCamera camera;
     //AprilTagDetectionPipeline aprilTagDetectionPipeline;
@@ -187,6 +187,12 @@ public class WARHOGAuto extends LinearOpMode {
                     willNet = true;
                 }
                 else if(actionCombination == ActionCombination.NET_ONLY){
+                    actionCombination = ActionCombination.NET2;
+                    willPark = false;
+                    willSpecimen = false;
+                    willNet = true;
+                }
+                else if(actionCombination == ActionCombination.NET2){
                     actionCombination = ActionCombination.SPECIMEN_PARK;
                     willPark = true;
                     willSpecimen = true;
@@ -321,13 +327,13 @@ public class WARHOGAuto extends LinearOpMode {
             if(actionCombination==ActionCombination.NET_ONLY){
                 //Yea
                 drivetrain.MoveForDis(4, speed);
-                sleep(100);
+                //sleep(100);
                 drivetrain.SideMoveForDis(-46, speed);
-                sleep(300);
+                //sleep(300);
                 newIntakeOuttake.setArmByDefault(NewIntakeOuttake.armPos.UPRIGHT);
-                sleep(100);
+                //sleep(100);
                 drivetrain.RotateForDegree(170, speed/2);
-                sleep(500);
+                //sleep(500);
                 newIntakeOuttake.setSlideHeight(NewIntakeOuttake.slideHeight.MAX);
                 sleep(750);
                 newIntakeOuttake.setArm(1050);
@@ -335,17 +341,64 @@ public class WARHOGAuto extends LinearOpMode {
                 newIntakeOuttake.openClaw();
                 sleep(200);
                 newIntakeOuttake.closeClaw();
-                //Don't think we need a pause here
                 newIntakeOuttake.setArmByDefault(NewIntakeOuttake.armPos.UPRIGHT);
                 sleep(800);
                 drivetrain.RotateForDegree(-60, speed/2);
-                sleep(200);
+                //sleep(200);
                 newIntakeOuttake.retractSlide();
-                sleep(200);
+                //sleep(200);
                 drivetrain.MoveForDis(-6, speed); //So we don't hit the pole?
-                sleep(300);
+                //sleep(300);
                 newIntakeOuttake.setArmByDefault(NewIntakeOuttake.armPos.DOWN);
-
+            }
+            if(actionCombination==ActionCombination.NET2){
+                //Yea
+                drivetrain.MoveForDis(4, speed);
+                //sleep(100);
+                drivetrain.SideMoveForDis(-46, speed);
+                //sleep(300);
+                newIntakeOuttake.setArmByDefault(NewIntakeOuttake.armPos.UPRIGHT);
+                //sleep(100);
+                drivetrain.RotateForDegree(170, speed/2);
+                //sleep(500);
+                newIntakeOuttake.setSlideHeight(NewIntakeOuttake.slideHeight.MAX);
+                sleep(750);
+                newIntakeOuttake.setArm(1050);
+                sleep(400);
+                newIntakeOuttake.openClaw();
+                //sleep(200);
+                //newIntakeOuttake.closeClaw();
+                newIntakeOuttake.setArmByDefault(NewIntakeOuttake.armPos.UPRIGHT);
+                sleep(800);
+                drivetrain.RotateForDegree(-170, speed/2);
+                //sleep(200);
+                newIntakeOuttake.retractSlide();
+                //sleep(200);
+                drivetrain.SideMoveForDis(8, speed); //Line up with sample
+                //sleep(300);
+                newIntakeOuttake.setArm(100);
+                newIntakeOuttake.setSlide(2000);
+                newIntakeOuttake.closeClaw();
+                newIntakeOuttake.setArmByDefault(NewIntakeOuttake.armPos.UPRIGHT);
+                sleep(100);
+                drivetrain.SideMoveForDis(-8, speed*.75);
+                drivetrain.RotateForDegree(170, speed/2);
+                newIntakeOuttake.setSlideHeight(NewIntakeOuttake.slideHeight.MAX);
+                sleep(750);
+                newIntakeOuttake.setArm(1050);
+                sleep(400);
+                newIntakeOuttake.openClaw();
+                sleep(200);
+                newIntakeOuttake.closeClaw();
+                newIntakeOuttake.setArmByDefault(NewIntakeOuttake.armPos.UPRIGHT);
+                sleep(800);
+                drivetrain.RotateForDegree(-60, speed/2);
+                //sleep(200);
+                newIntakeOuttake.retractSlide();
+                //sleep(200);
+                drivetrain.MoveForDis(-6, speed); //So we don't hit the pole?
+                //sleep(300);
+                newIntakeOuttake.setArmByDefault(NewIntakeOuttake.armPos.DOWN);
             }
             if(actionCombination==ActionCombination.SPECIMEN_ONLY){
                 //OK?

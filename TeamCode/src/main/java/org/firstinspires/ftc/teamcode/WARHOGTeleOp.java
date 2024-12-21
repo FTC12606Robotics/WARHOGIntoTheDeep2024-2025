@@ -165,10 +165,12 @@ public class WARHOGTeleOp extends LinearOpMode {
             armPos += armPosChange;
             int powArm = 0;
             if (armPosChange < 0){
-                powArm = -1;
+                //powArm = -1;
+                powArm = armPosChange;
             }
             else if (armPosChange > 0){
-                powArm = 1;
+                //powArm = 1;
+                powArm = armPosChange;
             }
             else{
                 powArm = 0;
@@ -206,10 +208,12 @@ public class WARHOGTeleOp extends LinearOpMode {
             slidePos += slidePosChange;
             int powSlide = 0;
             if (slidePosChange < 0){
-                powSlide = -1;
+                //powSlide = -1;
+                powSlide = slidePosChange;
             }
             else if (slidePosChange > 0){
-                powSlide = 1;
+                //powSlide = 1;
+                powSlide = slidePosChange;
             }
             else{
                 powSlide = 0;
