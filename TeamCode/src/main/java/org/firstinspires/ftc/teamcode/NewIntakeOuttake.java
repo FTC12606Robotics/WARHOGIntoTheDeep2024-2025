@@ -25,7 +25,7 @@ public class NewIntakeOuttake {
     final static int motorLimitBuffer = 100;
 
     final static double clawOpen = .40;
-    final static double clawClose = 0.52;
+    final static double clawClose = 0.54;
     final static double slideSpeed = 1;
     final static double armSpeed = .40;
 
@@ -43,7 +43,7 @@ public class NewIntakeOuttake {
     }
 
     //enum armPos {UPRIGHT, DOWN, SIZING}
-    enum armPos {UPRIGHT(1230), DOWN(0), SUBSIZING(370);
+    enum armPos {UPRIGHT(1220), DOWN(0), SUBSIZING(370);
        private int value;
 
        private armPos(int value) {
@@ -230,7 +230,7 @@ public class NewIntakeOuttake {
 
         //for the soft limit
         if (getArmPos() <= 400){
-            SlideMax = 5250;
+            SlideMax = 2800;
         }
 
         // Approach limits with reduced speed
