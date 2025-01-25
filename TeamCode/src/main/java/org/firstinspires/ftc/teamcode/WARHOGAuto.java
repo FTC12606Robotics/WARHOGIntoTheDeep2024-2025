@@ -4,10 +4,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+//import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
+//import org.openftc.easyopencv.OpenCvCameraFactory;
+//import org.openftc.easyopencv.OpenCvCameraRotation;
 
 //import java.util.ArrayList;
 
@@ -388,9 +388,9 @@ public class WARHOGAuto extends LinearOpMode {
                 //drivetrain.SideMoveForDis(-8, speed*.75);
                 drivetrain.RotateForDegree(168, speed/2);
                 newIntakeOuttake.setSlideHeight(NewIntakeOuttake.slideHeight.MAX);
-                sleep(100);
-                drivetrain.MoveForDis(1, speed);
                 sleep(50);
+                drivetrain.MoveForDis(1, speed);
+                //sleep(50);
                 newIntakeOuttake.setArm(1050);
                 sleep(100);
                 newIntakeOuttake.openClaw();

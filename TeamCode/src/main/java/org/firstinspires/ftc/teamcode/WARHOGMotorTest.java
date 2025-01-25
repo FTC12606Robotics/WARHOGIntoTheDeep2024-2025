@@ -6,34 +6,34 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-@TeleOp(name="WARHOGTeleOp", group="")
-public class WARHOGTeleOp extends LinearOpMode {
-    public WARHOGTeleOp() throws InterruptedException {}
+@TeleOp(name="WARHOGMotorTest", group="")
+public class WARHOGMotorTest extends LinearOpMode {
+    public WARHOGMotorTest() throws InterruptedException {}
 
     @Override
     public void runOpMode() throws InterruptedException {
 
         //set up classes
-        Drivetrain drivetrain = new Drivetrain(hardwareMap, telemetry);
-        NewIntakeOuttake newIntakeOuttake = new NewIntakeOuttake(hardwareMap, telemetry);
+        //Drivetrain drivetrain = new Drivetrain(hardwareMap, telemetry);
+        NewNewIntakeOuttake newNewIntakeOuttake = new NewNewIntakeOuttake(hardwareMap, telemetry);
 
         //set up variables
         double joyx, joyy, joyz, gas, baseSpeed, offset, modAngle;
         boolean slideMinimumPos, slideLowPos, slideMediumPos, slideHighPos, slideMaxPos,
-                centricityToggle, resetDriveAngle, clawToggle, encoderReset, PIDTEST, nolIMIT, armEncoderReset, slideEncoderReset, preciseMOTOR,
+                centricityToggle, resetDriveAngle, clawToggle, encoderReset, PIDTEST, nolIMIT, armEncoderReset, slideEncoderReset,
                 uprightArmPos, sizingArmPos, downArmPos;
 
         offset = 0;
         Drivetrain.Centricity centricity = Drivetrain.Centricity.FIELD;
 
         baseSpeed = .4;
-        int armPos = newIntakeOuttake.getArmPos();
+        int armPos = newNewIntakeOuttake.getArmPos();
         double armSpeed = .1;
-        double armPosChange;
+        int armPosChange;
 
-        int slidePos = newIntakeOuttake.getSlidePos();
+        int slidePos = newNewIntakeOuttake.getSlidePos();
         double slideSpeed = .1;
-        double slidePosChange;
+        int slidePosChange;
 
         Gamepad currentGamepad1 = new Gamepad();
         Gamepad currentGamepad2 = new Gamepad();
@@ -42,8 +42,8 @@ public class WARHOGTeleOp extends LinearOpMode {
 
         while (!isStarted() && !isStopRequested()) {
             //newIntakeOuttake.closeClaw();
-            armPos = newIntakeOuttake.getArmPos();
-            slidePos = newIntakeOuttake.getSlidePos();
+            armPos = newNewIntakeOuttake.getArmPos();
+            slidePos = newNewIntakeOuttake.getSlidePos();
             try {
                 previousGamepad1.copy(currentGamepad1);
                 previousGamepad2.copy(currentGamepad2);
@@ -84,10 +84,10 @@ public class WARHOGTeleOp extends LinearOpMode {
                 // Swallow the possible exception, it should not happen as
                 // currentGamepad1/2 are being copied from valid Gamepads.
             }
-            telemetry.addData("angle", drivetrain.getIMUAngleData(Drivetrain.AngleType.HEADING)/PI*180);
+            //telemetry.addData("angle", drivetrain.getIMUAngleData(Drivetrain.AngleType.HEADING)/PI*180);
 
 
-    //set up inputs
+            //set up inputs
 
             //inputs that toggle the modes
             centricityToggle = currentGamepad1.dpad_down && !previousGamepad1.dpad_down; //change whether the drive is bot or field centric
@@ -103,8 +103,8 @@ public class WARHOGTeleOp extends LinearOpMode {
                 }
             }
 
-            armPosChange = -(currentGamepad2.left_stick_y); //Change to neg. to make code cleaner later TODO
-            slidePosChange = -(currentGamepad2.right_stick_y); //Change to neg. to make code cleaner later
+            armPosChange = -(int)(currentGamepad2.left_stick_y); //Change to neg. to make code cleaner later TODO
+            slidePosChange = -(int)(currentGamepad2.right_stick_y); //Change to neg. to make code cleaner later
             clawToggle = currentGamepad2.left_bumper && !previousGamepad2.left_bumper;
             encoderReset = currentGamepad2.right_bumper && !previousGamepad2.right_bumper;
             armEncoderReset = currentGamepad2.left_stick_button;
@@ -120,8 +120,7 @@ public class WARHOGTeleOp extends LinearOpMode {
             slideHighPos = currentGamepad2.dpad_up;
             slideMaxPos = currentGamepad2.y;
 
-            //PIDTEST = currentGamepad2.left_trigger != 0;
-            preciseMOTOR = currentGamepad2.left_trigger != 0;
+            PIDTEST = currentGamepad2.left_trigger != 0;
             nolIMIT = currentGamepad2.right_trigger !=0;
 
             //set up vectors
@@ -135,7 +134,7 @@ public class WARHOGTeleOp extends LinearOpMode {
             telemetry.addData("x", joyx);
             telemetry.addData("z", joyz);
 
-
+/*
             //set and print motor powers
             double[] motorPowers = drivetrain.driveVectors(centricity, joyx, joyy, joyz, baseSpeed+gas);
             for (double line:motorPowers){
@@ -149,28 +148,22 @@ public class WARHOGTeleOp extends LinearOpMode {
 
             modAngle = (drivetrain.getIMUAngleData(Drivetrain.AngleType.HEADING)/PI*180)%360;    //********Reposition or take out these 2 lines if not needed, figure out what nod angle is for*********
             telemetry.addData("mod angle", modAngle);
-
+*/
 
             //Reset Motor Encoders to Zero
             if(encoderReset){
-                newIntakeOuttake.resetEncoders();
+                newNewIntakeOuttake.resetEncoders();
             }
             if(armEncoderReset){
-                newIntakeOuttake.resetArmMotorEncoder();
+                newNewIntakeOuttake.resetArmMotorEncoder();
             }
             if(slideEncoderReset){
-                newIntakeOuttake.resetSlideMotorEncoder();
+                newNewIntakeOuttake.resetSlideMotorEncoder();
             }
-
-            //Check if you should use precise motor powers
-            //if (preciseMOTOR){
-                //TODO if it doesn't work directly in func. call
-            //}
-            //TODO test arm and slide precise w/ and w/out limits, take precise out and see if doesn't break
 
             //move arm
             armPos += armPosChange;
-            double powArm = 0;
+            int powArm = 0;
             if (armPosChange < 0){
                 //powArm = -1;
                 powArm = armPosChange;
@@ -184,36 +177,36 @@ public class WARHOGTeleOp extends LinearOpMode {
             }
 
             if (gamepad2.left_stick_y !=0 && !nolIMIT){
-                newIntakeOuttake.setArmControllerPower(powArm, preciseMOTOR);
-                telemetry.addData("Moving arm with stick with pow:", powArm);
+                newNewIntakeOuttake.setArmControllerPower2(powArm);
+                telemetry.addLine("Moving arm with stick");
             }
             else if (gamepad2.left_stick_y !=0 && nolIMIT){
-                newIntakeOuttake.setArmControllerPowerNoLimit(powArm, preciseMOTOR);
-                telemetry.addData("Moving arm with stick WITHOUT LIMIT with pow:", powArm);
+                newNewIntakeOuttake.setArmControllerPowerNoLimit(powArm);
+                telemetry.addLine("Moving arm with stick WITHOUT LIMIT");
             }
-            else  if (gamepad2.left_stick_y == 0 && !newIntakeOuttake.isArmGoingToPos()){
-                newIntakeOuttake.setArmControllerPower(0);
+            else  if (gamepad2.left_stick_y == 0 && !newNewIntakeOuttake.isArmGoingToPos()){
+                newNewIntakeOuttake.setArmControllerPower2(0);
             }
 
             telemetry.addData("Arm Position", armPos);
-            telemetry.addData("True Arm Position", newIntakeOuttake.getArmPos());
+            telemetry.addData("True Arm Position", newNewIntakeOuttake.getArmPos());
 
             //defined arm positions
             if(uprightArmPos){
-                newIntakeOuttake.setArmByDefaultNoWait(NewIntakeOuttake.armPos.UPRIGHT);
+                newNewIntakeOuttake.setArmByDefaultNoWait(NewNewIntakeOuttake.armPos.UPRIGHT);
             }
             if(downArmPos){
-                newIntakeOuttake.setArmByDefaultNoWait(NewIntakeOuttake.armPos.DOWN);
+                newNewIntakeOuttake.setArmByDefaultNoWait(NewNewIntakeOuttake.armPos.DOWN);
             }
             if(sizingArmPos){
-                newIntakeOuttake.setArmByDefaultNoWait(NewIntakeOuttake.armPos.SUBSIZING);
+                newNewIntakeOuttake.setArmByDefaultNoWait(NewNewIntakeOuttake.armPos.SUBSIZING);
             }
-            armPos = newIntakeOuttake.getArmPos();
+            armPos = newNewIntakeOuttake.getArmPos();
 
 
             //move slide
             slidePos += slidePosChange;
-            double powSlide = 0;
+            int powSlide = 0;
             if (slidePosChange < 0){
                 //powSlide = -1;
                 powSlide = slidePosChange;
@@ -227,46 +220,46 @@ public class WARHOGTeleOp extends LinearOpMode {
             }
 
             if (gamepad2.right_stick_y != 0 && !nolIMIT){
-                newIntakeOuttake.setSlideControllerPower(powSlide, preciseMOTOR);
-                telemetry.addData("Moving slide with stick with pow:", powSlide);
+                newNewIntakeOuttake.setSlideControllerPower(powSlide);
+                telemetry.addLine("Moving slide with stick");
             }
             else if (gamepad2.right_stick_y != 0 && nolIMIT){
-                newIntakeOuttake.setSlideControllerPowerNoLimit(powSlide, preciseMOTOR);
-                telemetry.addData("Moving slide with stick WITHOUT LIMIT with pow:", powSlide);
+                newNewIntakeOuttake.setSlideControllerPowerNoLimit(powSlide);
+                telemetry.addLine("Moving slide with stick WITHOUT LIMIT");
             }
-            else if (gamepad2.right_stick_y == 0 && !newIntakeOuttake.isSlideGoingToPos()){
-                newIntakeOuttake.setSlideControllerPower(0);
+            else if (gamepad2.right_stick_y == 0 && !newNewIntakeOuttake.isSlideGoingToPos()){
+                newNewIntakeOuttake.setSlideControllerPower(0);
             }
 
             telemetry.addData("Slide Position", slidePos);
-            telemetry.addData("True Slide Position", newIntakeOuttake.getSlidePos());
+            telemetry.addData("True Slide Position", newNewIntakeOuttake.getSlidePos());
 
             //TODO FOR TEST
-            /*if (PIDTEST){
-                newIntakeOuttake.setSlideHeightPID(NewIntakeOuttake.slideHeight.MEDIUM);
-            }*/
+            if (PIDTEST){
+                newNewIntakeOuttake.setSlideHeightPID(NewNewIntakeOuttake.slideHeight.MEDIUM);
+            }
 
             //defined slide positions
             if(slideMinimumPos){
-                newIntakeOuttake.setSlideHeightNoWait(NewIntakeOuttake.slideHeight.MINIMUM);
+                newNewIntakeOuttake.setSlideHeightNoWait(NewNewIntakeOuttake.slideHeight.MINIMUM);
             }
             if(slideLowPos){
-                newIntakeOuttake.setSlideHeightNoWait(NewIntakeOuttake.slideHeight.LOW);
+                newNewIntakeOuttake.setSlideHeightNoWait(NewNewIntakeOuttake.slideHeight.LOW);
             }
             if(slideMediumPos){
-                newIntakeOuttake.setSlideHeightNoWait(NewIntakeOuttake.slideHeight.MEDIUM);
+                newNewIntakeOuttake.setSlideHeightNoWait(NewNewIntakeOuttake.slideHeight.MEDIUM);
             }
             if(slideHighPos){
-                newIntakeOuttake.setSlideHeightNoWait(NewIntakeOuttake.slideHeight.HIGH);
+                newNewIntakeOuttake.setSlideHeightNoWait(NewNewIntakeOuttake.slideHeight.HIGH);
             }
             if(slideMaxPos){
-                newIntakeOuttake.setSlideHeightNoWait(NewIntakeOuttake.slideHeight.MAX);
+                newNewIntakeOuttake.setSlideHeightNoWait(NewNewIntakeOuttake.slideHeight.MAX);
             }
-            slidePos = newIntakeOuttake.getSlidePos(); //Update other counter
+            slidePos = newNewIntakeOuttake.getSlidePos(); //Update other counter
 
             //open/close the claw
-            if(clawToggle) {newIntakeOuttake.toggleClaw();}
-            telemetry.addData("Claw Open?: ", newIntakeOuttake.isClawOpen());
+            if(clawToggle) {newNewIntakeOuttake.toggleClaw();}
+            telemetry.addData("Claw Open?: ", newNewIntakeOuttake.isClawOpen());
 
             telemetry.addData("Left y joy: ", currentGamepad2.left_stick_y);
             telemetry.addData("right y joy: ", currentGamepad2.right_stick_y);

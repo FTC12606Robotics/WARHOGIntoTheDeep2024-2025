@@ -1,17 +1,18 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-//import com.qualcomm.robotcore.hardware.DcMotorEx;
-//import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class NewIntakeOuttake {
+public class NewNewIntakeOuttake {
     private DcMotor slideMotor;
     private DcMotor armMotor;
+    private DcMotor armMotor2;
     private Servo clawServo;
 
     private Telemetry telemetry;
@@ -25,7 +26,7 @@ public class NewIntakeOuttake {
     final static int motorLimitBuffer = 100;
 
     final static double clawOpen = .40;
-    final static double clawClose = 0.54;
+    final static double clawClose = 0.53;
     final static double slideSpeed = 1;
     final static double armSpeed = .40;
 
@@ -43,19 +44,19 @@ public class NewIntakeOuttake {
     }
 
     //enum armPos {UPRIGHT, DOWN, SIZING}
-    enum armPos {UPRIGHT(1220), DOWN(0), SUBSIZING(370);
-       private int value;
+    enum armPos {UPRIGHT(1230), DOWN(0), SUBSIZING(370);
+        private int value;
 
-       private armPos(int value) {
-           this.value = value;
-       }
+        private armPos(int value) {
+            this.value = value;
+        }
 
-       public int getValue() {
-           return value;
-       }
-      }
+        public int getValue() {
+            return value;
+        }
+    }
 
-      //For PID
+    //For PID
     double integralSum = 0;
     final double Kp = 0.013;
     final double Ki = 0.00;
@@ -64,7 +65,7 @@ public class NewIntakeOuttake {
     ElapsedTime timer = new ElapsedTime();
     private double lastError = 0;
 
-    NewIntakeOuttake(HardwareMap hardwareMap, Telemetry telemetry){
+    NewNewIntakeOuttake(HardwareMap hardwareMap, Telemetry telemetry){
         slideMotor = hardwareMap.get(DcMotor.class, "slideMotor");
         slideMotor.setDirection(DcMotor.Direction.FORWARD);
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -74,6 +75,11 @@ public class NewIntakeOuttake {
         armMotor.setDirection(DcMotor.Direction.REVERSE);
         armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        armMotor2 = hardwareMap.get(DcMotor.class, "armMotor2");
+        armMotor2.setDirection(DcMotor.Direction.FORWARD);
+        armMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        armMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         clawServo = hardwareMap.get(Servo.class, "clawServo");
         closeClaw();
@@ -85,6 +91,7 @@ public class NewIntakeOuttake {
     public void resetEncoders(){
         slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        armMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         telemetry.addLine("Resought Motor Encoders");
     }
 
@@ -218,61 +225,13 @@ public class NewIntakeOuttake {
         telemetry.addData("This is the power to func.", power);
         int SlideMax = slideMax; //For the soft limit
         slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        if (power < 0){
+        /*if (power < 0){
             power = -slideSpeed;
         }
         if (power > 0){
             power = slideSpeed;
-        }
-
-        int pos = slideMotor.getCurrentPosition();
-
-        //for the soft limit
-        if (getArmPos() <= 400){
-            SlideMax = 2800;
-        }
-
-        // Approach limits with reduced speed
-        if (pos >= (SlideMax - motorLimitBuffer) && power > 0) {
-            power = power/2; // Slow down as it approaches max
-        }
-        else if (pos <= (slideMin + motorLimitBuffer) && power < 0) {
-            power = power/2; // Slow down as it approaches min
-        }
-
-        if (pos< SlideMax && pos> slideMin){
-            telemetry.addData("slide power: T1", power);
-            slideMotor.setPower(power);
-        }
-        else if (pos>=SlideMax && power<0){
-            telemetry.addData("slide power: T2", power);
-            slideMotor.setPower(power);
-        }
-        else if (pos<=slideMin && power>0){
-            telemetry.addData("slide power: T3", power);
-            slideMotor.setPower(power);
-        }
-        else{
-            slideMotor.setPower(0);
-        }
-    }
-    public void setSlideControllerPower(double power, boolean preciseMotor){
-        telemetry.addData("This is the power to func.", power);
-        int SlideMax = slideMax; //For the soft limit
-        slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        if (preciseMotor){
-            power = slideSpeed*power;
-        }
-        else{
-            if (power < 0){
-                power = -slideSpeed;
-            }
-            if (power > 0){
-                power = slideSpeed;
-            }
-        }
+        }*/
+        power = slideSpeed*power;
 
         int pos = slideMotor.getCurrentPosition();
 
@@ -309,30 +268,14 @@ public class NewIntakeOuttake {
     //For emergencies
     public void setSlideControllerPowerNoLimit(double power){
         slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        if (power < 0){
+        /*if (power < 0){
             power = -slideSpeed;
         }
         if (power > 0){
             power = slideSpeed;
-        }
+        }*/
 
-        slideMotor.setPower(power);
-    }
-    public void setSlideControllerPowerNoLimit(double power, boolean preciseMotor){
-        slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        if (preciseMotor){
-            power = slideSpeed*power;
-        }
-        else{
-            if (power < 0){
-                power = -slideSpeed;
-            }
-            if (power > 0){
-                power = slideSpeed;
-            }
-        }
+        power = slideSpeed*power;
 
         slideMotor.setPower(power);
     }
@@ -421,13 +364,13 @@ public class NewIntakeOuttake {
     public void setArmControllerPower(double power){
         //armMotor.setPower(0);
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        if (power  < 0){
+        /*if (power < 0){
             power = -armSpeed;
         }
         if (power > 0){
             power = armSpeed;
-        }
+        }*/
+        power = armSpeed*power;
 
         //int pos = getArmPos();
         int pos = armMotor.getCurrentPosition();
@@ -454,21 +397,18 @@ public class NewIntakeOuttake {
             armMotor.setPower(0);
         }
     }
-    public void setArmControllerPower(double power, boolean preciseMotor){
+
+    public void setArmControllerPower2(double power){
         //armMotor.setPower(0);
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        if (preciseMotor){
-            power = armSpeed*power;
+        armMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        /*if (power < 0){
+            power = -armSpeed;
         }
-        else{
-            if (power < 0){
-                power = -armSpeed;
-            }
-            if (power > 0){
-                power = armSpeed;
-            }
-        }
+        if (power > 0){
+            power = armSpeed;
+        }*/
+        power = armSpeed*power;
 
         //int pos = getArmPos();
         int pos = armMotor.getCurrentPosition();
@@ -482,46 +422,35 @@ public class NewIntakeOuttake {
         }
 
         if (pos< armMax && pos> armMin){
-            telemetry.addData("arm power: ", power);
+            telemetry.addData("arm power: ", armMotor.getPower());
+            telemetry.addData("arm Power2", armMotor2.getPower());
             armMotor.setPower(power);
+            armMotor2.setPower(power);
         }
         else if(pos>= armMax && power<0){
             armMotor.setPower(power);
+            armMotor2.setPower(power);
         }
         else if (pos<= armMin && power>0){
             armMotor.setPower(power);
+            armMotor2.setPower(power);
         }
         else{
             armMotor.setPower(0);
+            armMotor2.setPower(0);
         }
     }
 
     //For emergencies
     public void setArmControllerPowerNoLimit(double power){
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        if (power  < 0){
+        /*if (power  < 0){
             power = -armSpeed;
         }
         if (power > 0){
             power = armSpeed;
-        }
-
-        armMotor.setPower(power);
-    }
-    public void setArmControllerPowerNoLimit(double power, boolean preciseMotor){
-        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        if (preciseMotor){
-            power = armSpeed*power;
-        }
-        else{
-            if (power  < 0){
-                power = -armSpeed;
-            }
-            if (power > 0){
-                power = armSpeed;
-            }
-        }
+        }*/
+        power = armSpeed*power;
 
         armMotor.setPower(power);
     }
